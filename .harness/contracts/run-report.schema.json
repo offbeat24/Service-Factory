@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness-hq.local/contracts/run-report.schema.json",
+  "title": "RunReport",
+  "type": "object",
+  "required": [
+    "task_id",
+    "provider",
+    "lead_model",
+    "worker_models",
+    "changed_scope",
+    "verification_results",
+    "evidence_paths",
+    "failures",
+    "handoff_notes",
+    "next_actions"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9-]+$"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "lead_model": {
+      "type": "string"
+    },
+    "worker_models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "changed_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification_results": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "evidence_paths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "handoff_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}
+

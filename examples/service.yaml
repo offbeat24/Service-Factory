@@ -1,0 +1,42 @@
+id: focus-sprint
+name: Focus Sprint
+concept: deep-work planning and execution coach for solo builders
+target_users:
+  - solo founders trying to ship consistently
+  - indie hackers with too many parallel ideas
+  - operators who need a strict execution routine
+problem: Users collect many ideas but fail to turn them into a clear sprint plan, daily execution loop, and evidence-backed review ritual.
+pages:
+  - home landing page with positioning and proof
+  - sprint planner for weekly scope selection
+  - daily execution board for focused sessions
+  - review page with retrospective evidence and momentum tracking
+core_flows:
+  - capture a weekly sprint goal and break it into daily execution slices
+  - run a focused work session and log evidence for completion
+  - review the sprint with metrics and qualitative notes
+data_entities:
+  - sprint
+  - daily plan
+  - focus session
+  - review note
+branding:
+  tone: sharp and disciplined
+  visual_direction: editorial productivity with warm contrast
+  keywords:
+    - calm
+    - sharp
+    - execution
+monetization: freemium subscription with premium analytics and coaching templates
+auth_need: required for saved plans and historical analytics
+storage_need: moderate because users keep plan history and evidence snippets
+deploy_preference: vercel
+domain_preference: subdomain on one root domain
+provider: openai
+overrides:
+  evidence_tooling: playwright when the actual app scaffold is created
+success_metrics:
+  - weekly sprint completion rate
+  - number of completed focus sessions per user
+  - returning users per 7-day window
+

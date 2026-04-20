@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness-hq.local/contracts/service.schema.json",
+  "title": "ServiceSpec",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "concept",
+    "target_users",
+    "problem",
+    "pages",
+    "core_flows",
+    "data_entities",
+    "branding",
+    "monetization",
+    "auth_need",
+    "storage_need",
+    "deploy_preference",
+    "domain_preference",
+    "provider",
+    "overrides",
+    "success_metrics"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "concept": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_users": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "problem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "core_flows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "data_entities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      }
+    },
+    "branding": {
+      "type": "object"
+    },
+    "monetization": {
+      "type": "string"
+    },
+    "auth_need": {
+      "type": "string"
+    },
+    "storage_need": {
+      "type": "string"
+    },
+    "deploy_preference": {
+      "type": "string"
+    },
+    "domain_preference": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "openai"
+      ]
+    },
+    "overrides": {
+      "type": "object"
+    },
+    "success_metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": true
+}
+

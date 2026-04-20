@@ -1,0 +1,28 @@
+{
+  "task_id": "BOOTSTRAP-001",
+  "provider": "openai",
+  "lead_model": "gpt-5.1-codex",
+  "worker_models": [
+    "gpt-5.1-codex-mini"
+  ],
+  "changed_scope": [
+    "docs/product/product-spec.kr.md",
+    "docs/exec-plans/active/BOOTSTRAP-001.kr.md"
+  ],
+  "verification_results": [
+    {
+      "name": "pre-task",
+      "status": "passed",
+      "details": "The bootstrap plan and product documents are aligned."
+    }
+  ],
+  "evidence_paths": [],
+  "failures": [],
+  "handoff_notes": [
+    "The next implementation task should add a real app scaffold before evidence collection."
+  ],
+  "next_actions": [
+    "Create the first app-level feature slice.",
+    "Add evidence commands once the runtime scaffold exists."
+  ]
+}

@@ -1,0 +1,18 @@
+model = "gpt-5.1-codex"
+model_reasoning_effort = "high"
+review_model = "gpt-5.1-codex"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+project_doc_fallback_filenames = ["CLAUDE.md"]
+project_root_markers = ["AGENTS.md", ".codex/config.toml", ".harness/contracts/service.schema.json"]
+
+[features]
+codex_hooks = true
+
+[sandbox_workspace_write]
+network_access = false
+writable_roots = ["/tmp"]
+
+[agents]
+max_threads = 6
+max_depth = 1

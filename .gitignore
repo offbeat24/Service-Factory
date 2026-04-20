@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.coverage
+build/
+dist/
+coverage/
+tmp/
+temp/
+node_modules/
+.next/

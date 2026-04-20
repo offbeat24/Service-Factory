@@ -1,0 +1,10 @@
+name = "ui_checker"
+description = "Fast visual and flow checker for screenshots, DOM evidence, and browser console issues."
+model = "gpt-5.1-codex-mini"
+model_reasoning_effort = "medium"
+sandbox_mode = "read-only"
+developer_instructions = """
+Check UI evidence artifacts, screenshots, and flow outputs.
+Focus on broken flows, visible regressions, missing artifacts, and obvious console/network issues.
+Do not propose speculative redesigns.
+"""

@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "branch_pattern": "^task/(?P<task_id>[A-Z0-9-]+)(?:[-_/].*)?$",
+  "placeholder_tokens": [
+    "TODO",
+    "TBD",
+    "추후 작성"
+  ],
+  "exempt_paths": [
+    "artifacts/evidence/",
+    ".git/",
+    "__pycache__/",
+    ".pytest_cache/",
+    ".mypy_cache/",
+    ".coverage",
+    "build/",
+    "dist/",
+    ".next/",
+    "node_modules/",
+    "coverage/",
+    "tmp/",
+    "temp/"
+  ],
+  "required_documents": [
+    {
+      "path": "docs/product/product-spec.kr.md",
+      "sections": [
+        "서비스 개요",
+        "타깃 사용자",
+        "문제 정의",
+        "핵심 페이지",
+        "핵심 플로우",
+        "데이터 엔터티",
+        "성공 지표"
+      ]
+    },
+    {
+      "path": "docs/build-journal.kr.md",
+      "sections": [
+        "작업 로그"
+      ]
+    },
+    {
+      "path": "docs/architecture/why.kr.md",
+      "sections": [
+        "구조 원칙",
+        "기본 스택",
+        "예외와 override"
+      ]
+    },
+    {
+      "path": "docs/retrospectives/harness-feedback.kr.md",
+      "sections": [
+        "하네스 관찰",
+        "유지할 것",
+        "바꿀 것"
+      ]
+    },
+    {
+      "path": "docs/public/case-study.en.md",
+      "sections": [
+        "Overview",
+        "Audience",
+        "System",
+        "Evidence",
+        "Next Steps"
+      ]
+    }
+  ],
+  "task_bound_documents": {
+    "active_exec_plan_path": "docs/exec-plans/active/{task_id}.kr.md",
+    "active_exec_plan_sections": [
+      "목표",
+      "범위",
+      "제약",
+      "수용 기준",
+      "읽을 문서",
+      "예상 변경",
+      "검증 방법"
+    ],
+    "run_report_path": "artifacts/run-reports/{task_id}.json",
+    "build_journal_marker": "## Task {task_id}",
+    "why_marker": "## Task {task_id}",
+    "harness_feedback_marker": "## Task {task_id}"
+  },
+  "why_required_prefixes": [
+    "AGENTS.md",
+    ".codex/",
+    "scripts/",
+    "service.yaml",
+    "docs-manifest.json",
+    ".github/"
+  ],
+  "harness_feedback_prefixes": [
+    "AGENTS.md",
+    ".codex/",
+    "scripts/",
+    "docs-manifest.json"
+  ]
+}
