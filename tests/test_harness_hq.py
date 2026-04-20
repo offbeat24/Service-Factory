@@ -53,8 +53,8 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / "docs" / "product" / "product-spec.kr.md").exists())
             self.assertTrue((repo / "scripts" / "harness.py").exists())
             config_text = (repo / ".codex" / "config.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.1-codex"', config_text)
-            self.assertIn('review_model = "gpt-5.1-codex"', config_text)
+            self.assertIn('model = "gpt-5.4"', config_text)
+            self.assertIn('review_model = "gpt-5.4"', config_text)
             self.assertIn("max_depth = 1", config_text)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
@@ -106,8 +106,8 @@ class HarnessHQTests(unittest.TestCase):
                     {
                         "task_id": "BOOTSTRAP-001",
                         "provider": "openai",
-                        "lead_model": "gpt-5.1-codex",
-                        "worker_models": ["gpt-5.1-codex-mini"],
+                        "lead_model": "gpt-5.4",
+                        "worker_models": ["gpt-5.4-mini"],
                         "changed_scope": ["docs/product/product-spec.kr.md"],
                         "verification_results": [{"name": "pre-complete", "status": "passed"}],
                         "evidence_paths": [],

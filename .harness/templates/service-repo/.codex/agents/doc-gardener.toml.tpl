@@ -1,6 +1,6 @@
 name = "doc_gardener"
 description = "Task-bound documentation maintainer for plans, journals, architecture notes, and case studies."
-model = "gpt-5.1-codex-mini"
+model = "gpt-5.4-mini"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

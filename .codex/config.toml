@@ -1,6 +1,6 @@
-model = "gpt-5.1-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "high"
-review_model = "gpt-5.1-codex"
+review_model = "gpt-5.4"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"
 project_doc_fallback_filenames = ["CLAUDE.md"]

@@ -22,8 +22,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS_ROOT = ROOT / ".harness" / "contracts"
 TEMPLATE_ROOT = ROOT / ".harness" / "templates" / "service-repo"
 EXAMPLES_ROOT = ROOT / "examples"
-EXPECTED_LEAD_MODEL = "gpt-5.1-codex"
-EXPECTED_WORKER_MODEL = "gpt-5.1-codex-mini"
+EXPECTED_LEAD_MODEL = "gpt-5.4"
+EXPECTED_WORKER_MODEL = "gpt-5.4-mini"
 REQUIRED_TEMPLATES = [
     "AGENTS.md.tpl",
     "README.md.tpl",

@@ -44,8 +44,8 @@ REQUIRED_SERVICE_FIELDS = [
 
 BOOTSTRAP_TASK_ID = "BOOTSTRAP-001"
 INIT_TASK_ID = "INIT-000"
-LEAD_MODEL = "gpt-5.1-codex"
-WORKER_MODEL = "gpt-5.1-codex-mini"
+LEAD_MODEL = "gpt-5.4"
+WORKER_MODEL = "gpt-5.4-mini"
 
 
 def default_output_root() -> Path:
