@@ -32,7 +32,7 @@
 
 1. If this repo was just generated from HQ, move the active Codex conversation here before product work starts.
 2. Use Node `{{DEFAULT_NODE_VERSION}}` before npm commands.
-3. Keep the main branch name as `main`.
+3. Keep the main branch name as `main` and initialize with `git init -b main` if needed.
 4. Create or switch to a branch like `feature/{{BOOTSTRAP_TASK_ID}}-init`.
 5. Run `python3 scripts/harness.py pre-task`.
 6. Read the active exec plan, product spec, art direction, UI principles, and browser review checklist before editing code.

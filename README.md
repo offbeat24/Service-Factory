@@ -20,7 +20,7 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 2. Write a `service.yaml` first.
 3. Generate a service repository from this HQ into the sibling `deck/` directory.
 4. Switch the active Codex conversation and workspace to the generated repo. Do not keep implementing the product inside HQ.
-5. Keep the default integration branch name as `main`.
+5. If git is not initialized yet in the generated repo, use `git init -b main`.
 6. Create a work branch in the generated repo such as `feature/BOOTSTRAP-001-init`.
 7. Set the repo-local git hooks path with `git config core.hooksPath .githooks`.
 8. Optionally enable the commit template with `git config commit.template .gitmessage.txt`.
