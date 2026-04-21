@@ -19,11 +19,12 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 1. Run `python3 scripts/setup_hq.py` once after cloning on a new machine.
 2. Write a `service.yaml` first.
 3. Generate a service repository from this HQ into the sibling `deck/` directory.
-4. Create a task branch in the generated repo such as `task/BOOTSTRAP-001-init`.
-5. Set the repo-local git hooks path with `git config core.hooksPath .githooks`.
-6. Run the generated repo's `scripts/harness.py pre-task`.
-7. Let Codex work inside the generated repo with `AGENTS.md`, `.codex/`, docs, and hooks enabled.
-8. Before ending work, run `scripts/harness.py pre-complete` or rely on hooks plus CI to enforce the same rules.
+4. Switch the active Codex conversation and workspace to the generated repo. Do not keep implementing the product inside HQ.
+5. Create a task branch in the generated repo such as `task/BOOTSTRAP-001-init`.
+6. Set the repo-local git hooks path with `git config core.hooksPath .githooks`.
+7. Run the generated repo's `scripts/harness.py pre-task`.
+8. Let Codex work inside the generated repo with `AGENTS.md`, `.codex/`, docs, and hooks enabled.
+9. Before ending work, run `scripts/harness.py pre-complete` or rely on hooks plus CI to enforce the same rules.
 
 ## Current defaults
 
@@ -32,7 +33,9 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 - Lead/review model policy: `gpt-5.4`
 - Supporting worker policy: `gpt-5.4-mini`
 - Generated service repos use `agents.max_depth = 1` so the root agent can run under current Codex while nested workers remain disallowed by repo policy.
-- Default product stack policy for generated repos: `Next.js + TypeScript`, `Vercel`, `Supabase/Postgres`
+- Default runtime policy for generated repos: `Node 20.19.6 LTS`
+- Default product stack policy for generated repos: `Next.js 16.x LTS line + React 19.x stable line + TypeScript`, `Vercel`, `Supabase/Postgres`
+- Generated service repos include `.nvmrc` and `.node-version` pinned to the HQ runtime default.
 - Generated service repos include design docs for art direction and UI principles.
 - Generated service repos include a browser-review checklist for design and functional iteration in the running app.
 - Documentation policy: Korean for internal operating docs, English for public case studies

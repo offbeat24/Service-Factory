@@ -8,7 +8,8 @@
 
 ## 기본 스택
 
-- 웹 앱 기본 방향: Next.js + TypeScript
+- 웹 앱 기본 방향: {{DEFAULT_WEB_STACK}}
+- 기본 Node 런타임: {{DEFAULT_NODE_LABEL}}
 - 배포 기본 방향: {{DEPLOY_PREFERENCE}}
 - 데이터 기본 방향: Supabase/Postgres
 - 인증 필요도: {{AUTH_NEED}}
@@ -26,4 +27,3 @@
 
 - 첫 구현은 기본 스택 가정을 깨지 않는 범위에서 시작한다.
 - 구조 변경이 필요하면 이 문서에 사유와 기대효과를 함께 남긴다.
-

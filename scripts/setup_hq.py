@@ -67,6 +67,7 @@ def main() -> int:
     print(f"HQ root: {ROOT}")
     print(f"Deck root: {deck_root}")
     print("Next: python3 scripts/generate_service_repo.py --spec examples/service.yaml")
+    print("After generation: switch Codex to the generated repo and continue product work there, not in HQ.")
     return 0
 
 

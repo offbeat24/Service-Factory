@@ -38,6 +38,8 @@ REQUIRED_TEMPLATES = [
     "AGENTS.md.tpl",
     "README.md.tpl",
     ".gitignore.tpl",
+    ".nvmrc.tpl",
+    ".node-version.tpl",
     ".codex/config.toml.tpl",
     ".codex/hooks.json.tpl",
     ".codex/agents/reviewer.toml.tpl",
@@ -303,12 +305,14 @@ def validate_repo_hygiene() -> None:
 
     template_gitignore = TEMPLATE_ROOT / ".gitignore.tpl"
     template_gitignore_text = read_text(template_gitignore)
-    for token in [".DS_Store", "__pycache__/", "*.pyc", "node_modules/", ".next/"]:
+    for token in [".DS_Store", "__pycache__/", "*.pyc", "node_modules/", ".next/", "*.tsbuildinfo"]:
         ensure(token in template_gitignore_text, f"service template .gitignore.tpl must include {token}")
 
     lingering = [path for path in DISALLOWED_REPO_FILES if (ROOT / path).exists()]
     ensure(not lingering, f"remove disallowed repo files: {', '.join(lingering)}")
     ensure((ROOT / "scripts" / "setup_hq.py").exists(), "HQ repo must include scripts/setup_hq.py")
+    ensure((TEMPLATE_ROOT / ".nvmrc.tpl").exists(), "service template must include .nvmrc.tpl")
+    ensure((TEMPLATE_ROOT / ".node-version.tpl").exists(), "service template must include .node-version.tpl")
 
 
 def validate_examples() -> None:
@@ -339,6 +343,8 @@ def validate_dry_run_generation() -> None:
         generated = destination / "focus-sprint"
         ensure((generated / "AGENTS.md").exists(), "generated AGENTS.md missing")
         ensure((generated / ".gitignore").exists(), "generated .gitignore missing")
+        ensure((generated / ".nvmrc").exists(), "generated .nvmrc missing")
+        ensure((generated / ".node-version").exists(), "generated .node-version missing")
         ensure((generated / ".codex" / "config.toml").exists(), "generated config.toml missing")
         ensure((generated / ".codex" / "hooks.json").exists(), "generated hooks.json missing")
         ensure((generated / "service.yaml").exists(), "generated service.yaml missing")
@@ -365,14 +371,16 @@ def codex_session_start() -> int:
         "systemMessage": (
             "Harness HQ controls contracts, templates, and guardrails. "
             "Keep product code out of this repo. "
-            "If this machine has not been prepared yet, run `python3 scripts/setup_hq.py` first."
+            "If this machine has not been prepared yet, run `python3 scripts/setup_hq.py` first. "
+            "After generating a service repo from service.yaml, move the active work to that generated repo."
         ),
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",
             "additionalContext": (
                 "On a new machine, run `python3 scripts/setup_hq.py` before other HQ work. "
                 "Before large changes, read AGENTS.md and the docs linked from it. "
-                "If scripts, contracts, or .codex policy change, update docs and run python3 scripts/validate_harness.py --mode all."
+                "If scripts, contracts, or .codex policy change, update docs and run python3 scripts/validate_harness.py --mode all. "
+                "Once a service repo is generated, continue the implementation conversation there instead of staying in HQ."
             ),
         },
     }

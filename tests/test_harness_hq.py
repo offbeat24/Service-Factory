@@ -47,6 +47,8 @@ class HarnessHQTests(unittest.TestCase):
             repo = output_root / "focus-sprint"
             self.assertTrue((repo / "AGENTS.md").exists())
             self.assertTrue((repo / ".gitignore").exists())
+            self.assertTrue((repo / ".nvmrc").exists())
+            self.assertTrue((repo / ".node-version").exists())
             self.assertTrue((repo / ".codex" / "config.toml").exists())
             self.assertTrue((repo / ".codex" / "hooks.json").exists())
             self.assertTrue((repo / "docs-manifest.json").exists())
@@ -59,6 +61,8 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn('model = "gpt-5.4"', config_text)
             self.assertIn('review_model = "gpt-5.4"', config_text)
             self.assertIn("max_depth = 1", config_text)
+            self.assertEqual((repo / ".nvmrc").read_text(encoding="utf-8").strip(), "20.19.6")
+            self.assertEqual((repo / ".node-version").read_text(encoding="utf-8").strip(), "20.19.6")
             art_direction_text = (repo / "docs" / "design" / "art-direction.kr.md").read_text(encoding="utf-8")
             self.assertIn("Linear landing page clarity", art_direction_text)
             browser_review_text = (repo / "docs" / "design" / "browser-review.kr.md").read_text(encoding="utf-8")
@@ -66,6 +70,9 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("기능 리뷰", browser_review_text)
             product_spec_text = (repo / "docs" / "product" / "product-spec.kr.md").read_text(encoding="utf-8")
             self.assertIn("keywords: calm, sharp, execution", product_spec_text)
+            readme_text = (repo / "README.md").read_text(encoding="utf-8")
+            self.assertIn("Node 20.19.6 LTS", readme_text)
+            self.assertIn("Switch Codex to this generated repo", readme_text)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-setup-") as tmpdir:

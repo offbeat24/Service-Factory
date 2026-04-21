@@ -6,6 +6,7 @@
 
 ## Setup Commands
 
+- Node runtime baseline: `{{DEFAULT_NODE_LABEL}}`
 - Enable git hook enforcement once per clone: `git config core.hooksPath .githooks`
 - Pre-task gate: `python3 scripts/harness.py pre-task`
 - Pre-complete gate: `python3 scripts/harness.py pre-complete`
@@ -28,11 +29,13 @@
 
 ## Task Flow
 
-1. Create or switch to a branch like `task/{{BOOTSTRAP_TASK_ID}}-init`.
-2. Run `python3 scripts/harness.py pre-task`.
-3. Read the active exec plan, product spec, art direction, UI principles, and browser review checklist before editing code.
-4. Keep work inside the current task scope.
-5. Before stopping, run `python3 scripts/harness.py pre-complete`.
+1. If this repo was just generated from HQ, move the active Codex conversation here before product work starts.
+2. Use Node `{{DEFAULT_NODE_VERSION}}` before npm commands.
+3. Create or switch to a branch like `task/{{BOOTSTRAP_TASK_ID}}-init`.
+4. Run `python3 scripts/harness.py pre-task`.
+5. Read the active exec plan, product spec, art direction, UI principles, and browser review checklist before editing code.
+6. Keep work inside the current task scope.
+7. Before stopping, run `python3 scripts/harness.py pre-complete`.
 
 ## Codex Policy
 

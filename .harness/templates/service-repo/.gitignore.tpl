@@ -11,3 +11,4 @@ tmp/
 temp/
 node_modules/
 .next/
+*.tsbuildinfo

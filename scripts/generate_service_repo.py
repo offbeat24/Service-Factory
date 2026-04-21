@@ -8,6 +8,7 @@ import json
 import os
 import re
 import shutil
+import sys
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -46,6 +47,11 @@ BOOTSTRAP_TASK_ID = "BOOTSTRAP-001"
 INIT_TASK_ID = "INIT-000"
 LEAD_MODEL = "gpt-5.4"
 WORKER_MODEL = "gpt-5.4-mini"
+DEFAULT_NODE_VERSION = "20.19.6"
+DEFAULT_NODE_LABEL = "Node 20.19.6 LTS"
+DEFAULT_NEXT_LINE = "Next.js 16.x LTS line"
+DEFAULT_REACT_LINE = "React 19.x stable line"
+DEFAULT_WEB_STACK = "Next.js 16.x LTS line + React 19.x stable line + TypeScript"
 
 
 def default_output_root() -> Path:
@@ -218,6 +224,11 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
         "DEPLOY_PREFERENCE": str(spec["deploy_preference"]),
         "DOMAIN_PREFERENCE": str(spec["domain_preference"]),
         "PROVIDER": str(spec["provider"]),
+        "DEFAULT_NODE_VERSION": DEFAULT_NODE_VERSION,
+        "DEFAULT_NODE_LABEL": DEFAULT_NODE_LABEL,
+        "DEFAULT_NEXT_LINE": DEFAULT_NEXT_LINE,
+        "DEFAULT_REACT_LINE": DEFAULT_REACT_LINE,
+        "DEFAULT_WEB_STACK": DEFAULT_WEB_STACK,
         "TODAY": today,
         "BOOTSTRAP_TASK_ID": BOOTSTRAP_TASK_ID,
         "INIT_TASK_ID": INIT_TASK_ID,
@@ -398,6 +409,7 @@ def main() -> int:
     args = parse_args()
     destination = generate(args.spec.resolve(), args.output_root.resolve(), args.force)
     print(destination)
+    print("Next: switch Codex to the generated repo and continue product implementation there.", file=sys.stderr)
     return 0
 
 
