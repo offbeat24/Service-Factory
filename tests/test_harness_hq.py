@@ -49,8 +49,10 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / ".gitignore").exists())
             self.assertTrue((repo / ".nvmrc").exists())
             self.assertTrue((repo / ".node-version").exists())
+            self.assertTrue((repo / ".gitmessage.txt").exists())
             self.assertTrue((repo / ".codex" / "config.toml").exists())
             self.assertTrue((repo / ".codex" / "hooks.json").exists())
+            self.assertTrue((repo / ".githooks" / "commit-msg").exists())
             self.assertTrue((repo / "docs-manifest.json").exists())
             self.assertTrue((repo / "docs" / "product" / "product-spec.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "art-direction.kr.md").exists())
@@ -73,6 +75,8 @@ class HarnessHQTests(unittest.TestCase):
             readme_text = (repo / "README.md").read_text(encoding="utf-8")
             self.assertIn("Node 20.19.6 LTS", readme_text)
             self.assertIn("Switch Codex to this generated repo", readme_text)
+            self.assertIn("feature/BOOTSTRAP-001-init", readme_text)
+            self.assertIn("git config commit.template .gitmessage.txt", readme_text)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-setup-") as tmpdir:
@@ -236,8 +240,8 @@ class HarnessHQTests(unittest.TestCase):
         run(["git", "config", "user.name", "Harness HQ"], repo)
         run(["git", "config", "user.email", "harness@example.com"], repo)
         run(["git", "add", "."], repo)
-        run(["git", "commit", "-m", "initial scaffold"], repo)
-        run(["git", "checkout", "-b", "task/BOOTSTRAP-001-init"], repo)
+        run(["git", "commit", "-m", "chore: Initial scaffold"], repo)
+        run(["git", "checkout", "-b", "feature/BOOTSTRAP-001-init"], repo)
 
 
 if __name__ == "__main__":

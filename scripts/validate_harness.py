@@ -40,6 +40,7 @@ REQUIRED_TEMPLATES = [
     ".gitignore.tpl",
     ".nvmrc.tpl",
     ".node-version.tpl",
+    ".gitmessage.txt.tpl",
     ".codex/config.toml.tpl",
     ".codex/hooks.json.tpl",
     ".codex/agents/reviewer.toml.tpl",
@@ -47,6 +48,7 @@ REQUIRED_TEMPLATES = [
     ".codex/agents/doc-gardener.toml.tpl",
     ".github/workflows/harness.yml.tpl",
     ".githooks/pre-commit.tpl",
+    ".githooks/commit-msg.tpl",
     "scripts/harness.py.tpl",
     "scripts/generate_claude_shim.py.tpl",
     "docs/product/product-spec.kr.md.tpl",
@@ -345,8 +347,10 @@ def validate_dry_run_generation() -> None:
         ensure((generated / ".gitignore").exists(), "generated .gitignore missing")
         ensure((generated / ".nvmrc").exists(), "generated .nvmrc missing")
         ensure((generated / ".node-version").exists(), "generated .node-version missing")
+        ensure((generated / ".gitmessage.txt").exists(), "generated .gitmessage.txt missing")
         ensure((generated / ".codex" / "config.toml").exists(), "generated config.toml missing")
         ensure((generated / ".codex" / "hooks.json").exists(), "generated hooks.json missing")
+        ensure((generated / ".githooks" / "commit-msg").exists(), "generated commit-msg hook missing")
         ensure((generated / "service.yaml").exists(), "generated service.yaml missing")
         ensure((generated / "docs-manifest.json").exists(), "generated docs-manifest.json missing")
         ensure((generated / "docs" / "design" / "art-direction.kr.md").exists(), "generated art-direction doc missing")

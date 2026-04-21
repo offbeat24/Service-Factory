@@ -20,6 +20,7 @@
 - 제품 스펙 하나에 디자인 의도를 몰아넣지 않는다.
 - 생성 서비스 레포에는 `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 넣는다.
 - 생성 서비스 레포에는 런타임 기준을 명확히 하기 위해 `.nvmrc`와 `.node-version`도 함께 넣는다.
+- 생성 서비스 레포에는 브랜치/커밋 규칙을 바로 쓸 수 있도록 `.gitmessage.txt`와 필요한 git hook도 함께 넣는다.
 - 디자인 품질 판단은 감상평 대신 reference, anti-pattern, screenshot evidence, spacing/type hierarchy 메모로 남긴다.
 - 브라우저에서 실제 화면과 핵심 플로우를 보고 수정하는 루프를 기본 절차로 취급한다.
 
@@ -29,6 +30,7 @@
 - 모델 핀은 Codex CLI/App 기준과 맞아야 하며, HQ와 서비스 템플릿이 같은 Codex 전용 모델군을 써야 한다.
 - 서비스 템플릿은 현재 Codex 런타임 제약에 맞춰 `agents.max_depth = 1`을 사용한다.
 - 생성 서비스 레포의 기본 앱 런타임은 `Node 20.19.6 LTS`, 기본 웹 스택은 `Next.js 16.x LTS line + React 19.x stable line + TypeScript`로 고정한다.
+- 생성 서비스 레포의 기본 메인 브랜치 이름은 `main`이고, task-bound 작업 브랜치는 `feature/<TASK-ID>-slug` 같은 접두사 기반 규칙을 따른다.
 - 위 값은 루트 에이전트를 실행 가능하게 두기 위한 최소값이다. 중첩 worker 금지 정책은 `AGENTS.md` 문구로 계속 유지한다.
 
 ## 새 머신 준비

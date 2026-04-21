@@ -306,7 +306,8 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 "evidence_paths": [],
                 "failures": [],
                 "handoff_notes": [
-                    "The next human or agent should create a task branch named task/BOOTSTRAP-001-...",
+                    "The next human or agent should keep `main` as the integration branch and create a work branch such as feature/BOOTSTRAP-001-....",
+                    "Set git hooks with `git config core.hooksPath .githooks` and optionally `git config commit.template .gitmessage.txt` before editing product code.",
                     "Run python3 scripts/harness.py pre-task before editing product code."
                 ],
                 "next_actions": [
@@ -340,7 +341,7 @@ def copy_templates(destination: Path, context: dict[str, str]) -> None:
         text = source.read_text(encoding="utf-8")
         target.write_text(render_text(text, context), encoding="utf-8")
 
-        if target.name in {"pre-commit", "harness.py", "generate_claude_shim.py"}:
+        if target.name in {"pre-commit", "commit-msg", "harness.py", "generate_claude_shim.py"}:
             mode = target.stat().st_mode
             target.chmod(mode | 0o111)
 
