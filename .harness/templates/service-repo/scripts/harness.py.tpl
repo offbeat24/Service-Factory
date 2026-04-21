@@ -39,6 +39,35 @@ RUN_REPORT_REQUIRED_FIELDS = [
     "handoff_notes",
     "next_actions",
 ]
+REQUIRED_SERVICE_FIELDS = [
+    "id",
+    "name",
+    "concept",
+    "target_users",
+    "problem",
+    "pages",
+    "core_flows",
+    "data_entities",
+    "branding",
+    "monetization",
+    "auth_need",
+    "storage_need",
+    "deploy_preference",
+    "domain_preference",
+    "provider",
+    "overrides",
+    "success_metrics",
+]
+REQUIRED_BRANDING_FIELDS = [
+    "tone",
+    "visual_direction",
+    "keywords",
+]
+REQUIRED_TASK_PACK_READS = [
+    "docs/design/art-direction.kr.md",
+    "docs/design/ui-principles.kr.md",
+    "docs/design/browser-review.kr.md",
+]
 
 
 class ValidationError(RuntimeError):
@@ -87,7 +116,7 @@ def infer_task_id(explicit: str | None) -> str:
             return matched.group("task_id")
 
     active_dir = ROOT / "docs" / "exec-plans" / "active"
-    active_files = sorted(path.stem for path in active_dir.glob("*.kr.md"))
+    active_files = sorted(path.name.removesuffix(".kr.md") for path in active_dir.glob("*.kr.md"))
     if len(active_files) == 1:
         return active_files[0]
     raise ValidationError("could not determine task_id; pass --task-id or use a task/<TASK-ID>-... branch")
@@ -173,18 +202,33 @@ def validate_service_yaml() -> None:
     payload = load_yaml(ROOT / "service.yaml")
     if not isinstance(payload, dict):
         raise ValidationError("service.yaml must be a YAML mapping")
-    required = [
-        "id",
-        "name",
-        "concept",
-        "pages",
-        "core_flows",
-        "success_metrics",
-        "provider",
-    ]
-    missing = [field for field in required if field not in payload]
+    missing = [field for field in REQUIRED_SERVICE_FIELDS if field not in payload]
     if missing:
         raise ValidationError(f"service.yaml missing required keys: {', '.join(missing)}")
+    for field in ["target_users", "pages", "core_flows", "data_entities", "success_metrics"]:
+        value = payload.get(field)
+        if not isinstance(value, list) or not value:
+            raise ValidationError(f"service.yaml {field} must be a non-empty list")
+    if payload.get("provider") != "openai":
+        raise ValidationError("service.yaml provider must be openai")
+    if not isinstance(payload.get("overrides"), dict):
+        raise ValidationError("service.yaml overrides must be a mapping")
+    branding = payload.get("branding")
+    if not isinstance(branding, dict):
+        raise ValidationError("service.yaml branding must be a mapping")
+    branding_missing = [field for field in REQUIRED_BRANDING_FIELDS if field not in branding]
+    if branding_missing:
+        raise ValidationError(f"service.yaml branding missing required keys: {', '.join(branding_missing)}")
+    if not isinstance(branding["keywords"], list) or not branding["keywords"]:
+        raise ValidationError("service.yaml branding.keywords must be a non-empty list")
+    for field in ["references", "anti_references", "layout_principles", "component_rules"]:
+        value = branding.get(field)
+        if value is not None and not isinstance(value, list):
+            raise ValidationError(f"service.yaml branding.{field} must be a list when provided")
+    for field in ["palette", "typography", "motion", "imagery"]:
+        value = branding.get(field)
+        if value is not None and not isinstance(value, dict):
+            raise ValidationError(f"service.yaml branding.{field} must be a mapping when provided")
 
 
 def validate_task_pack(task_id: str) -> None:
@@ -193,6 +237,17 @@ def validate_task_pack(task_id: str) -> None:
     payload = load_json(path)
     if payload.get("task_id") != task_id:
         raise ValidationError(f"task-pack.json task_id mismatch: expected {task_id}")
+    must_read = payload.get("must_read")
+    docs_required = payload.get("docs_required")
+    if not isinstance(must_read, list):
+        raise ValidationError("task-pack.json must_read must be a list")
+    if not isinstance(docs_required, list):
+        raise ValidationError("task-pack.json docs_required must be a list")
+    for path_str in REQUIRED_TASK_PACK_READS:
+        if path_str not in must_read:
+            raise ValidationError(f"task-pack.json must_read missing required doc: {path_str}")
+        if path_str not in docs_required:
+            raise ValidationError(f"task-pack.json docs_required missing required doc: {path_str}")
 
 
 def validate_active_exec_plan(task_id: str) -> None:

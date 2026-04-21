@@ -28,6 +28,8 @@
 
 {{BRANDING_BULLETS}}
 
+디자인 세부 기준은 `docs/design/art-direction.kr.md`와 `docs/design/ui-principles.kr.md`를 따른다.
+
 ## 수익화 가정
 
 - {{MONETIZATION}}
@@ -35,4 +37,3 @@
 ## 성공 지표
 
 {{SUCCESS_METRICS_BULLETS}}
-

@@ -12,16 +12,18 @@
 
 - Canonical agent guide: `AGENTS.md`
 - Product planning: `docs/product/product-spec.kr.md`
+- Design direction: `docs/design/art-direction.kr.md` and `docs/design/ui-principles.kr.md`
 - Evidence policy: task-bound run reports and artifacts
 - Default stack direction: Next.js + TypeScript on {{DEPLOY_PREFERENCE}}
 
 ## Evidence
 
 The repository is prepared to collect screenshots, DOM snapshots, browser console output, network failures, and server log excerpts under `artifacts/evidence/<task-id>/`.
+For UI and flow-heavy work, include both mobile and desktop first-view screenshots, flow captures, and notes on hierarchy, console, and network behavior.
+Use the browser review checklist in `docs/design/browser-review.kr.md` to drive the review loop.
 
 ## Next Steps
 
 - Implement the first production-facing flow.
 - Attach a concrete evidence bundle for that flow.
 - Expand this case study with real usage and deployment outcomes.
-

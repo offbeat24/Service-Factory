@@ -31,7 +31,40 @@
         "핵심 페이지",
         "핵심 플로우",
         "데이터 엔터티",
+        "브랜드 방향",
         "성공 지표"
+      ]
+    },
+    {
+      "path": "docs/design/art-direction.kr.md",
+      "sections": [
+        "디자인 목표",
+        "참고 레퍼런스",
+        "피해야 할 패턴",
+        "컬러 토큰",
+        "타이포그래피 방향",
+        "이미지와 일러스트 방향"
+      ]
+    },
+    {
+      "path": "docs/design/ui-principles.kr.md",
+      "sections": [
+        "레이아웃 원칙",
+        "컴포넌트 규칙",
+        "모션 원칙",
+        "반응형 규칙",
+        "디자인 evidence 체크"
+      ]
+    },
+    {
+      "path": "docs/design/browser-review.kr.md",
+      "sections": [
+        "리뷰 준비",
+        "기능 리뷰",
+        "데스크톱 리뷰",
+        "모바일 리뷰",
+        "evidence 캡처",
+        "수정 루프"
       ]
     },
     {

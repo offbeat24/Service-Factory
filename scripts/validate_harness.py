@@ -24,6 +24,16 @@ TEMPLATE_ROOT = ROOT / ".harness" / "templates" / "service-repo"
 EXAMPLES_ROOT = ROOT / "examples"
 EXPECTED_LEAD_MODEL = "gpt-5.4"
 EXPECTED_WORKER_MODEL = "gpt-5.4-mini"
+REQUIRED_BRANDING_FIELDS = [
+    "tone",
+    "visual_direction",
+    "keywords",
+]
+REQUIRED_TASK_PACK_READS = [
+    "docs/design/art-direction.kr.md",
+    "docs/design/ui-principles.kr.md",
+    "docs/design/browser-review.kr.md",
+]
 REQUIRED_TEMPLATES = [
     "AGENTS.md.tpl",
     "README.md.tpl",
@@ -38,6 +48,9 @@ REQUIRED_TEMPLATES = [
     "scripts/harness.py.tpl",
     "scripts/generate_claude_shim.py.tpl",
     "docs/product/product-spec.kr.md.tpl",
+    "docs/design/art-direction.kr.md.tpl",
+    "docs/design/browser-review.kr.md.tpl",
+    "docs/design/ui-principles.kr.md.tpl",
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md.tpl",
     "docs/exec-plans/completed/INIT-000.kr.md.tpl",
     "docs/build-journal.kr.md.tpl",
@@ -143,6 +156,20 @@ def validate_service_spec(path: Path) -> None:
     missing = [field for field in REQUIRED_SERVICE_FIELDS if field not in payload]
     ensure(not missing, f"example service.yaml missing fields: {', '.join(missing)}")
     ensure(str(payload["provider"]) == "openai", "example service.yaml must use provider=openai")
+    branding = payload.get("branding")
+    ensure(isinstance(branding, dict), "example service.yaml branding must be a mapping")
+    branding_missing = [field for field in REQUIRED_BRANDING_FIELDS if field not in branding]
+    ensure(not branding_missing, f"example service.yaml branding missing fields: {', '.join(branding_missing)}")
+    ensure(
+        isinstance(branding["keywords"], list) and bool(branding["keywords"]),
+        "example service.yaml branding.keywords must be a non-empty list",
+    )
+    for field in ["references", "anti_references", "layout_principles", "component_rules"]:
+        value = branding.get(field)
+        ensure(value is None or isinstance(value, list), f"example service.yaml branding.{field} must be a list")
+    for field in ["palette", "typography", "motion", "imagery"]:
+        value = branding.get(field)
+        ensure(value is None or isinstance(value, dict), f"example service.yaml branding.{field} must be a mapping")
 
 
 def validate_task_pack(path: Path) -> None:
@@ -160,6 +187,11 @@ def validate_task_pack(path: Path) -> None:
     ]
     missing = [field for field in required if field not in payload]
     ensure(not missing, f"example task-pack.json missing fields: {', '.join(missing)}")
+    ensure(isinstance(payload["must_read"], list), "example task-pack.json must_read must be a list")
+    ensure(isinstance(payload["docs_required"], list), "example task-pack.json docs_required must be a list")
+    for path_str in REQUIRED_TASK_PACK_READS:
+        ensure(path_str in payload["must_read"], f"example task-pack.json must_read missing {path_str}")
+        ensure(path_str in payload["docs_required"], f"example task-pack.json docs_required missing {path_str}")
 
 
 def validate_run_report(path: Path) -> None:
@@ -311,6 +343,9 @@ def validate_dry_run_generation() -> None:
         ensure((generated / ".codex" / "hooks.json").exists(), "generated hooks.json missing")
         ensure((generated / "service.yaml").exists(), "generated service.yaml missing")
         ensure((generated / "docs-manifest.json").exists(), "generated docs-manifest.json missing")
+        ensure((generated / "docs" / "design" / "art-direction.kr.md").exists(), "generated art-direction doc missing")
+        ensure((generated / "docs" / "design" / "browser-review.kr.md").exists(), "generated browser-review doc missing")
+        ensure((generated / "docs" / "design" / "ui-principles.kr.md").exists(), "generated ui-principles doc missing")
         generated_depth = toml_int_value(generated / ".codex" / "config.toml", "agents", "max_depth")
         ensure(generated_depth is not None, "generated config.toml must define [agents].max_depth")
         ensure(generated_depth >= 1, "generated config.toml must set agents.max_depth >= 1")

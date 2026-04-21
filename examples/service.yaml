@@ -27,6 +27,37 @@ branding:
     - calm
     - sharp
     - execution
+  references:
+    - Linear landing page clarity
+    - Stripe docs information hierarchy
+    - Notion editorial spacing
+  anti_references:
+    - generic SaaS gradient hero
+    - crowded dashboard cards above the fold
+  palette:
+    primary: "#1F3A5F"
+    accent: "#D97A2B"
+    background: "#F6F1E8"
+    surface: "#FFFDF9"
+    text: "#111111"
+  typography:
+    headings: high-contrast serif
+    body: clean sans
+    density: comfortable
+  motion:
+    style: restrained
+    emphasis: section reveals only
+  imagery:
+    direction: editorial photography with warm contrast
+    illustration: minimal line accents only
+  layout_principles:
+    - one dominant action per screen
+    - spacious hero before dense utility
+    - mobile expands vertically instead of shrinking everything
+  component_rules:
+    - buttons should feel decisive rather than playful
+    - cards should separate sections, not create dashboard noise
+    - forms should stay narrow and readable
 monetization: freemium subscription with premium analytics and coaching templates
 auth_need: required for saved plans and historical analytics
 storage_need: moderate because users keep plan history and evidence snippets
@@ -39,4 +70,3 @@ success_metrics:
   - weekly sprint completion rate
   - number of completed focus sessions per user
   - returning users per 7-day window
-

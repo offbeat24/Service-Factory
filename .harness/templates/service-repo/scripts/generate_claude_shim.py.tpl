@@ -15,6 +15,9 @@ def build_shim(repo_root: Path) -> str:
     agents = read_text(repo_root / "AGENTS.md")
     why = read_text(repo_root / "docs" / "architecture" / "why.kr.md")
     product = read_text(repo_root / "docs" / "product" / "product-spec.kr.md")
+    art_direction = read_text(repo_root / "docs" / "design" / "art-direction.kr.md")
+    ui_principles = read_text(repo_root / "docs" / "design" / "ui-principles.kr.md")
+    browser_review = read_text(repo_root / "docs" / "design" / "browser-review.kr.md")
     return "\n\n".join(
         [
             "# CLAUDE.md",
@@ -24,6 +27,12 @@ def build_shim(repo_root: Path) -> str:
             why,
             "## Imported Product Notes",
             product,
+            "## Imported Art Direction",
+            art_direction,
+            "## Imported UI Principles",
+            ui_principles,
+            "## Imported Browser Review Checklist",
+            browser_review,
         ]
     ) + "\n"
 
@@ -43,4 +52,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

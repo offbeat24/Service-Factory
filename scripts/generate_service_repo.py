@@ -83,6 +83,20 @@ def ensure_service_spec(spec: dict[str, Any]) -> None:
 
     if not isinstance(spec["branding"], dict):
         raise SystemExit("branding must be a mapping")
+    required_branding_fields = ["tone", "visual_direction", "keywords"]
+    missing_branding = [field for field in required_branding_fields if field not in spec["branding"]]
+    if missing_branding:
+        raise SystemExit(f"branding is missing required fields: {', '.join(missing_branding)}")
+    if not isinstance(spec["branding"]["keywords"], list) or not spec["branding"]["keywords"]:
+        raise SystemExit("branding.keywords must be a non-empty list")
+    for field in ["references", "anti_references", "layout_principles", "component_rules"]:
+        value = spec["branding"].get(field)
+        if value is not None and not isinstance(value, list):
+            raise SystemExit(f"branding.{field} must be a list when provided")
+    for field in ["palette", "typography", "motion", "imagery"]:
+        value = spec["branding"].get(field)
+        if value is not None and not isinstance(value, dict):
+            raise SystemExit(f"branding.{field} must be a mapping when provided")
     if not isinstance(spec["overrides"], dict):
         raise SystemExit("overrides must be a mapping")
 
@@ -90,6 +104,8 @@ def ensure_service_spec(spec: dict[str, Any]) -> None:
 def flatten_item(item: Any) -> str:
     if isinstance(item, str):
         return item
+    if isinstance(item, list):
+        return ", ".join(flatten_item(entry) for entry in item)
     if isinstance(item, dict):
         parts = []
         for key, value in item.items():
@@ -126,11 +142,29 @@ def render_kv_bullets(mapping: dict[str, Any]) -> str:
 def render_branding(mapping: dict[str, Any]) -> str:
     if not mapping:
         return "- 브랜드 속성은 후속 작업에서 보강한다."
-    return "\n".join(f"- {key}: {flatten_item(value)}" for key, value in mapping.items())
+    summary_keys = ["tone", "visual_direction", "keywords"]
+    lines = []
+    for key in summary_keys:
+        if key in mapping:
+            lines.append(f"- {key}: {flatten_item(mapping[key])}")
+    return "\n".join(lines) if lines else "- 브랜드 속성은 후속 작업에서 보강한다."
+
+
+def render_list_or_default(items: Any, default: str) -> str:
+    if isinstance(items, list) and items:
+        return "\n".join(f"- {flatten_item(item)}" for item in items)
+    return f"- {default}"
+
+
+def render_mapping_or_default(mapping: Any, default: str) -> str:
+    if isinstance(mapping, dict) and mapping:
+        return "\n".join(f"- {key}: {flatten_item(value)}" for key, value in mapping.items())
+    return f"- {default}"
 
 
 def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
     today = date.today().isoformat()
+    branding = spec["branding"]
     return {
         "SERVICE_ID": str(spec["id"]),
         "SERVICE_NAME": str(spec["name"]),
@@ -141,7 +175,42 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
         "CORE_FLOWS_BULLETS": render_bullets(spec["core_flows"]),
         "DATA_ENTITIES_BULLETS": render_bullets(spec["data_entities"]),
         "SUCCESS_METRICS_BULLETS": render_bullets(spec["success_metrics"]),
-        "BRANDING_BULLETS": render_branding(spec["branding"]),
+        "BRANDING_BULLETS": render_branding(branding),
+        "DESIGN_TONE": str(branding.get("tone", "명시 필요")),
+        "DESIGN_VISUAL_DIRECTION": str(branding.get("visual_direction", "명시 필요")),
+        "DESIGN_KEYWORDS_BULLETS": render_list_or_default(branding.get("keywords"), "핵심 키워드를 추가한다."),
+        "DESIGN_REFERENCES_BULLETS": render_list_or_default(
+            branding.get("references"),
+            "참고 레퍼런스를 최소 3개까지 보강한다.",
+        ),
+        "DESIGN_ANTI_REFERENCES_BULLETS": render_list_or_default(
+            branding.get("anti_references"),
+            "피해야 할 디자인 패턴을 문서화한다.",
+        ),
+        "DESIGN_PALETTE_BULLETS": render_mapping_or_default(
+            branding.get("palette"),
+            "primary, accent, background, text 기준 색을 추가한다.",
+        ),
+        "DESIGN_TYPOGRAPHY_BULLETS": render_mapping_or_default(
+            branding.get("typography"),
+            "헤드라인/본문 타이포 기준을 추가한다.",
+        ),
+        "DESIGN_MOTION_BULLETS": render_mapping_or_default(
+            branding.get("motion"),
+            "모션 강도와 허용 범위를 추가한다.",
+        ),
+        "DESIGN_IMAGERY_BULLETS": render_mapping_or_default(
+            branding.get("imagery"),
+            "이미지 또는 일러스트 방향을 추가한다.",
+        ),
+        "DESIGN_LAYOUT_PRINCIPLES_BULLETS": render_list_or_default(
+            branding.get("layout_principles"),
+            "레이아웃 원칙을 최소 3개 정의한다.",
+        ),
+        "DESIGN_COMPONENT_RULES_BULLETS": render_list_or_default(
+            branding.get("component_rules"),
+            "버튼, 카드, 폼에 대한 규칙을 정의한다.",
+        ),
         "OVERRIDES_BULLETS": render_kv_bullets(spec["overrides"]),
         "MONETIZATION": str(spec["monetization"]),
         "AUTH_NEED": str(spec["auth_need"]),
@@ -160,6 +229,7 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 "goal": f"{spec['name']} 서비스의 첫 구현 루프를 시작한다.",
                 "scope": [
                     "서비스 레포의 기본 문서와 실행 환경을 검토한다.",
+                    "디자인 입력과 art direction, UI principles를 정렬한다.",
                     "핵심 플로우 1개를 구현하기 위한 세부 실행 계획을 만든다.",
                     "기본 검증 명령과 evidence 수집 경로를 점검한다.",
                 ],
@@ -172,10 +242,15 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                     "AGENTS.md",
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
                     "docs/product/product-spec.kr.md",
+                    "docs/design/art-direction.kr.md",
+                    "docs/design/ui-principles.kr.md",
+                    "docs/design/browser-review.kr.md",
                     "docs/architecture/why.kr.md",
                 ],
                 "acceptance_criteria": [
                     "active exec plan이 최신 상태다.",
+                    "디자인 기준 문서가 첫 화면의 톤, 계층, 금지 패턴을 설명한다.",
+                    "browser review checklist가 디자인과 기능 점검 순서를 설명한다.",
                     "핵심 플로우 구현 범위와 검증 방법이 분명하다.",
                     "evidence 저장 경로가 준비되어 있다.",
                 ],
@@ -185,6 +260,9 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 ],
                 "docs_required": [
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
+                    "docs/design/art-direction.kr.md",
+                    "docs/design/ui-principles.kr.md",
+                    "docs/design/browser-review.kr.md",
                     "docs/build-journal.kr.md",
                     "docs/architecture/why.kr.md",
                     "docs/retrospectives/harness-feedback.kr.md",

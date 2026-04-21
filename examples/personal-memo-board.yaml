@@ -1,0 +1,403 @@
+id: personal-memo-board
+name: Personal Memo Board
+concept: personal homepage web app that combines notes, links, time, weather, markdown cards, and layout personalization on a board the user can fully arrange
+target_users:
+  - segment: primary
+    description: people who want a browser home screen that feels like their own daily command board rather than a generic portal
+    jobs_to_be_done:
+      - open the browser and immediately see personal reminders, useful links, time, and lightweight context
+      - keep information visible without needing to open multiple apps
+      - shape the layout around individual habits instead of adapting to a fixed dashboard
+    pain_points:
+      - existing new-tab or homepage products feel too rigid or too sterile
+      - sticky notes and bookmarks are scattered across browser, desktop, and physical space
+      - current productivity dashboards are too business-like for personal daily use
+  - segment: secondary
+    description: users who already maintain memo boards on a fridge, desk, notebook, or wall and want a digital equivalent
+    jobs_to_be_done:
+      - replicate the glanceable nature of a real memo board
+      - move between practical utility and emotional familiarity
+      - preserve personal organization style across devices
+    pain_points:
+      - physical boards are not synced across devices
+      - note apps lose the spatial memory that physical boards provide
+  - segment: aspirational
+    description: markdown-friendly users who want a lightweight personal board instead of a heavy workspace tool
+    jobs_to_be_done:
+      - drop markdown content into a card and keep it readable on the homepage
+      - maintain a mix of rich text, quick notes, and pinned links in one place
+    pain_points:
+      - most markdown tools are document-first rather than dashboard-first
+problem: Existing browser homepages and dashboard apps are either too rigid, too productivity-corporate, or too generic, which makes them poor replacements for the personal memo board people keep on a fridge, cork board, or door.
+pages:
+  - id: sign-in
+    purpose: let users understand why signing in matters and enter the product with minimal friction
+    key_sections:
+      - value proposition summary
+      - social login entry point
+      - note about sync and persistence
+    primary_actions:
+      - continue with Google
+      - continue as guest only if product strategy later allows local-only mode
+    notes:
+      - first release should optimize for fast Google sign-in over many auth choices
+  - id: board-home
+    purpose: act as the main homepage users return to daily and keep as their default browser start page
+    key_sections:
+      - board canvas
+      - pinned quick actions
+      - optional lightweight top bar for search, theme switch, and board actions
+    primary_actions:
+      - add widget
+      - drag widget
+      - resize widget
+      - edit widget content inline
+      - switch theme or board mode
+    notes:
+      - the board should open into a useful default layout before the user customizes anything
+  - id: widget-library
+    purpose: help users add new widgets without overwhelming them
+    key_sections:
+      - featured starter widgets
+      - all widget types
+      - widget previews and descriptions
+    primary_actions:
+      - add note widget
+      - add link widget
+      - add markdown card
+      - add clock widget
+      - add weather widget
+    notes:
+      - library should favor clarity over variety in the first version
+  - id: personalization-settings
+    purpose: centralize board appearance, density, texture, and theme controls
+    key_sections:
+      - board mode selection
+      - color and texture controls
+      - typography and spacing controls
+      - layout preset management
+    primary_actions:
+      - change theme
+      - save current layout as preset
+      - reset current board arrangement
+    notes:
+      - personalization must feel powerful without becoming configuration-heavy
+  - id: account-and-sync
+    purpose: manage auth provider, sync behavior, location defaults, and account preferences
+    key_sections:
+      - profile summary
+      - auth provider settings
+      - location and weather defaults
+      - sync status and device preferences
+    primary_actions:
+      - update account settings
+      - manage preferred location
+      - review last sync status
+    notes:
+      - account settings should stay lightweight and not distract from the board itself
+core_flows:
+  - id: first-visit-and-onboarding
+    trigger: new user opens the service for the first time
+    steps:
+      - understand the product from a short sign-in page
+      - sign in with Google
+      - land on a starter board with example widgets already placed
+      - adjust one visible element such as note content or widget position
+    success_state: user reaches an immediately usable board without setup fatigue
+  - id: create-and-place-widget
+    trigger: user wants to add a new information block to the board
+    steps:
+      - open widget library
+      - choose widget type
+      - create initial content or settings
+      - place the widget on the board
+      - resize or move it until the layout feels right
+    success_state: user can add and position a widget in a few seconds
+  - id: maintain-daily-homepage
+    trigger: returning user opens the browser to start the day
+    steps:
+      - homepage loads saved board state
+      - user scans weather, time, notes, and pinned links
+      - user edits memo cards or opens links
+      - board autosaves small changes without explicit save friction
+    success_state: product becomes a habit-forming browser homepage rather than a one-time setup toy
+  - id: theme-and-layout-personalization
+    trigger: user wants the board to match personal taste or task context
+    steps:
+      - open personalization settings
+      - switch between cork board, clean desk, or minimal focus modes
+      - adjust spacing, typography, and color choices
+      - save a preferred preset
+    success_state: personalization feels expressive but controlled
+  - id: markdown-card-usage
+    trigger: user wants a richer note than a simple sticky memo
+    steps:
+      - add a markdown card widget
+      - write or import markdown text
+      - preview rendered result on the board
+      - keep the card pinned among other quick-glance widgets
+    success_state: markdown content remains readable and useful inside a dashboard context
+data_entities:
+  - name: user_profile
+    purpose: store identity and baseline preferences
+    key_fields:
+      - user_id
+      - display_name
+      - avatar_url
+      - auth_provider
+      - default_location
+      - last_active_at
+  - name: board
+    purpose: represent one personal homepage canvas
+    key_fields:
+      - board_id
+      - owner_user_id
+      - title
+      - active_theme_id
+      - board_mode
+      - background_style
+      - created_at
+      - updated_at
+  - name: widget
+    purpose: generic board element that can render different content types
+    key_fields:
+      - widget_id
+      - board_id
+      - widget_type
+      - position_x
+      - position_y
+      - width
+      - height
+      - z_index
+      - is_pinned
+      - config_json
+  - name: memo_note
+    purpose: simple quick-capture sticky style content
+    key_fields:
+      - note_id
+      - widget_id
+      - title
+      - body
+      - color_variant
+      - updated_at
+  - name: saved_link
+    purpose: fast access bookmark content shown on the board
+    key_fields:
+      - link_id
+      - widget_id
+      - label
+      - url
+      - icon_url
+      - open_mode
+  - name: markdown_card
+    purpose: render structured markdown content inside a board widget
+    key_fields:
+      - markdown_id
+      - widget_id
+      - source_text
+      - rendered_version
+      - preview_mode
+      - updated_at
+  - name: weather_preference
+    purpose: remember how the user wants weather shown
+    key_fields:
+      - preference_id
+      - user_id
+      - location_name
+      - latitude
+      - longitude
+      - temperature_unit
+      - last_refresh_at
+  - name: theme_preset
+    purpose: store reusable visual combinations for the board
+    key_fields:
+      - theme_id
+      - user_id
+      - name
+      - palette_json
+      - texture_mode
+      - typography_mode
+      - spacing_mode
+  - name: layout_snapshot
+    purpose: preserve and restore board arrangements
+    key_fields:
+      - snapshot_id
+      - board_id
+      - name
+      - layout_json
+      - created_at
+branding:
+  tone: personal, tactile, warm, and quietly useful
+  visual_direction: cork board inspired homepage with pinned notes, paper textures, subtle shadows, and optional cleaner themes for users who want a less literal interpretation
+  keywords:
+    - tactile
+    - personal
+    - flexible
+    - warm
+    - organized
+    - calm
+    - readable
+  references:
+    - physical cork board with pinned sticky notes
+    - fridge memo board used as a daily household dashboard
+    - editorial desktop surfaces with gentle material contrast
+    - stationery desk setups where paper and tools feel arranged rather than cluttered
+  anti_references:
+    - generic SaaS dashboard chrome
+    - noisy widget overload with tiny cards
+    - overly playful scrapbook clutter that hurts usability
+    - dark glossy productivity UI that fights the tactile metaphor
+  palette:
+    primary: "#6B4F2A"
+    accent: "#C95F3B"
+    background: "#E8D6B5"
+    surface: "#FFF8ED"
+    text: "#2B2219"
+    support_green: "#7B9B6A"
+    paper_yellow: "#F6E7A7"
+  typography:
+    headings: warm expressive serif or handwritten-accent display for limited use
+    body: clean readable sans for utility text
+    density: comfortable with strong readability over novelty
+    usage_rule: decorative type should only accent the experience and never reduce scan speed
+  motion:
+    style: restrained tactile transitions
+    emphasis: widget placement, card pickup, and theme switching should feel physical without slowing down daily use
+    interaction_rule: animations should confirm movement and placement rather than call attention to themselves
+  imagery:
+    direction: subtle paper, pin, cork, tape, and desk-material cues rather than heavy illustration
+    illustration: minimal decorative accents only
+    texture_rule: textures should enrich the surface but never lower text contrast
+  layout_principles:
+    - the board should feel open and user-owned rather than tightly templated
+    - default layout should be calm enough to function as a browser homepage
+    - dense information should remain readable through spacing and hierarchy
+    - mobile should preserve personalization without forcing the desktop board into an unusable miniature
+    - empty space should feel intentional, like a real board with room to add more
+  component_rules:
+    - widgets must be easy to move and resize with clear affordances
+    - memo cards should feel tactile but still render text sharply
+    - personalization controls should stay understandable even when powerful
+    - weather and clock widgets should support glanceable reading first
+    - markdown cards should maintain typographic hierarchy without looking like a document editor
+monetization: freemium with a strong free tier and optional premium for multi-board setups, advanced theme packs, richer sync history, and sharing features
+auth_need: required for sync and persistence; start with Google login as the default mainstream provider and keep room for additional providers later
+storage_need: moderate because each user stores layouts, widget settings, notes, markdown content, and personalization state
+deploy_preference: vercel
+domain_preference: subdomain on one root domain
+provider: openai
+overrides:
+  default_auth_direction: Supabase Auth with Google OAuth enabled first
+  secondary_auth_candidates:
+    - Apple sign in
+    - email magic link
+  auth_decision_rule: first release should optimize for least-friction sign in rather than provider breadth
+  default_experience_priority: usability and personalization over maximal widget count
+  board_interaction_model:
+    placement: freeform layout with gentle snap assistance
+    resize: visible handles with minimum readable sizes by widget type
+    save_behavior: autosave on meaningful changes with lightweight feedback
+    reset_behavior: allow layout reset without deleting content
+  starter_widgets:
+    - note
+    - quick links
+    - clock
+    - weather
+  widget_catalog:
+    must_have:
+      - note widget
+      - link widget
+      - markdown card
+      - clock widget
+      - weather widget
+    future_candidates:
+      - checklist widget
+      - calendar summary widget
+      - quote or mantra widget
+      - image widget
+  markdown_support:
+    create: users can create markdown-based cards directly
+    import: paste or upload markdown text into a widget flow
+    render: support headings, lists, emphasis, links, code blocks, and blockquotes in v1
+    editing_mode: edit and preview states should be simple and fast
+  board_modes:
+    - cork board tactile default
+    - clean desk mode
+    - minimal focus mode
+  personalization_controls:
+    - theme switching
+    - board texture intensity
+    - typography mode
+    - spacing density
+    - widget corner style
+    - shadow strength
+  homepage_behavior:
+    load_priority:
+      - cached board shell
+      - core widgets
+      - weather refresh
+    glanceability_rule: key info should be visible without interacting with a settings panel
+  privacy_defaults:
+    - personal boards are private by default
+    - no public sharing in first release unless explicitly added later
+    - weather location should be editable and never silently overexposed
+  evidence_tooling: playwright when the actual app scaffold is created
+  launch_positioning: your own memo board for the browser, not a team dashboard
+mvp_scope:
+  release_goal: deliver a personal browser homepage people can adopt immediately after first setup
+  must_include:
+    - Google sign in
+    - one default board per user
+    - add, edit, move, resize, and delete widgets
+    - memo note widget
+    - link widget
+    - markdown card widget
+    - clock widget
+    - weather widget
+    - theme switching with at least three board modes
+    - autosave and board persistence
+  should_include:
+    - starter layout templates
+    - layout reset action
+    - lightweight onboarding hints
+  explicitly_out_of_scope:
+    - real-time collaboration
+    - public sharing
+    - advanced automation workflows
+    - browser extension before validating the core web experience
+non_functional_requirements:
+  usability:
+    - first meaningful board should appear quickly after sign in
+    - core interactions must be understandable without documentation
+    - inline editing should minimize modal friction
+  performance:
+    - homepage should feel fast enough to serve as a browser default home
+    - widget drag and resize interactions should remain smooth on common laptops
+    - weather fetch latency should not block initial board rendering
+  accessibility:
+    - keyboard navigation for core actions should be possible
+    - text contrast must remain readable across tactile themes
+    - movable widgets need non-mouse alternatives over time even if first release starts with partial support
+  reliability:
+    - layout changes should persist consistently across refreshes
+    - autosave failures should be visible and recoverable
+  privacy:
+    - only the signed-in user can access personal board data by default
+    - location data must be scoped to weather functionality and remain user-editable
+future_expansion:
+  - multiple boards for home, work, and travel contexts
+  - import from browser bookmarks or markdown files
+  - optional local-only mode for privacy-sensitive users
+  - premium theme packs and seasonal board styles
+  - shared view-only boards for family or household use
+success_metrics:
+  - metric: homepage retention after 7 days
+    definition: percentage of users who keep the site as their browser homepage or daily start page after first setup
+  - metric: layout personalization rate
+    definition: percentage of users who move, resize, or restyle at least one widget in the first session
+  - metric: active widget depth
+    definition: average number of widgets that remain on the board after 7 days
+  - metric: weekly return rate
+    definition: percentage of users returning within a 7-day window
+  - metric: markdown adoption
+    definition: percentage of active users who create at least one markdown card

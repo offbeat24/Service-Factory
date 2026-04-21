@@ -33,6 +33,8 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 - Supporting worker policy: `gpt-5.4-mini`
 - Generated service repos use `agents.max_depth = 1` so the root agent can run under current Codex while nested workers remain disallowed by repo policy.
 - Default product stack policy for generated repos: `Next.js + TypeScript`, `Vercel`, `Supabase/Postgres`
+- Generated service repos include design docs for art direction and UI principles.
+- Generated service repos include a browser-review checklist for design and functional iteration in the running app.
 - Documentation policy: Korean for internal operating docs, English for public case studies
 
 ## Example commands

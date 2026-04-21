@@ -38,7 +38,24 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "docs/design/art-direction.kr.md"
+          }
+        },
+        {
+          "contains": {
+            "const": "docs/design/ui-principles.kr.md"
+          }
+        },
+        {
+          "contains": {
+            "const": "docs/design/browser-review.kr.md"
+          }
+        }
+      ]
     },
     "acceptance_criteria": {
       "type": "array",
@@ -56,7 +73,24 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "allOf": [
+        {
+          "contains": {
+            "const": "docs/design/art-direction.kr.md"
+          }
+        },
+        {
+          "contains": {
+            "const": "docs/design/ui-principles.kr.md"
+          }
+        },
+        {
+          "contains": {
+            "const": "docs/design/browser-review.kr.md"
+          }
+        }
+      ]
     },
     "approval_required": {
       "type": "boolean"
@@ -64,4 +98,3 @@
   },
   "additionalProperties": true
 }
-

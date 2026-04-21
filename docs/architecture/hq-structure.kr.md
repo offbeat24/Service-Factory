@@ -15,6 +15,13 @@
 - `.gitignore`: HQ 작업 중 생기는 OS/빌드 잡파일 차단
 - `../deck/`: HQ가 생성한 서비스 레포들이 쌓이는 형제 디렉터리
 
+## 디자인 문서 원칙
+
+- 제품 스펙 하나에 디자인 의도를 몰아넣지 않는다.
+- 생성 서비스 레포에는 `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 넣는다.
+- 디자인 품질 판단은 감상평 대신 reference, anti-pattern, screenshot evidence, spacing/type hierarchy 메모로 남긴다.
+- 브라우저에서 실제 화면과 핵심 플로우를 보고 수정하는 루프를 기본 절차로 취급한다.
+
 ## Codex 설정 원칙
 
 - Codex 설정은 HQ와 서비스 템플릿에서 함께 관리하고 함께 검증해야 한다.

@@ -9,6 +9,7 @@
 
 - AGENTS.md는 짧게 유지하고 상세 내용은 docs로 내리는 구조
 - task_id 기반 문서와 run-report 연결
+- art direction과 UI principles를 따로 두어 디자인 결정을 문서화하는 구조
 
 ## 바꿀 것
 
@@ -22,4 +23,3 @@
 
 - 첫 구현 루프에서는 어떤 검증이 자동화로 승격될지 기록한다.
 - 반복되는 실수는 문서가 아니라 hook, script, CI 규칙으로 승격한다.
-

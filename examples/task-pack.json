@@ -3,6 +3,7 @@
   "goal": "Focus Sprint 서비스의 첫 구현 루프를 시작한다.",
   "scope": [
     "제품 스펙과 구조 문서를 정렬한다.",
+    "디자인 기준 문서와 금지 패턴을 고정한다.",
     "첫 구현 범위와 검증 방법을 고정한다."
   ],
   "constraints": [
@@ -12,10 +13,15 @@
   "must_read": [
     "AGENTS.md",
     "docs/product/product-spec.kr.md",
+    "docs/design/art-direction.kr.md",
+    "docs/design/ui-principles.kr.md",
+    "docs/design/browser-review.kr.md",
     "docs/architecture/why.kr.md"
   ],
   "acceptance_criteria": [
     "active exec plan이 최신 상태다.",
+    "art direction과 UI principles가 첫 화면의 톤과 구조를 설명한다.",
+    "browser review checklist가 디자인과 기능 점검 순서를 설명한다.",
     "핵심 플로우 첫 구현 범위가 분명하다."
   ],
   "verification_commands": [
@@ -24,10 +30,12 @@
   ],
   "docs_required": [
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md",
+    "docs/design/art-direction.kr.md",
+    "docs/design/ui-principles.kr.md",
+    "docs/design/browser-review.kr.md",
     "docs/build-journal.kr.md",
     "docs/architecture/why.kr.md",
     "docs/retrospectives/harness-feedback.kr.md"
   ],
   "approval_required": false
 }
-

@@ -15,6 +15,9 @@
 ## Repo Map
 
 - Product spec: `docs/product/product-spec.kr.md`
+- Art direction: `docs/design/art-direction.kr.md`
+- UI principles: `docs/design/ui-principles.kr.md`
+- Browser review checklist: `docs/design/browser-review.kr.md`
 - Active execution plan: `docs/exec-plans/active/{{BOOTSTRAP_TASK_ID}}.kr.md`
 - Build journal: `docs/build-journal.kr.md`
 - Architecture why: `docs/architecture/why.kr.md`
@@ -27,7 +30,7 @@
 
 1. Create or switch to a branch like `task/{{BOOTSTRAP_TASK_ID}}-init`.
 2. Run `python3 scripts/harness.py pre-task`.
-3. Read the active exec plan and product spec before editing code.
+3. Read the active exec plan, product spec, art direction, UI principles, and browser review checklist before editing code.
 4. Keep work inside the current task scope.
 5. Before stopping, run `python3 scripts/harness.py pre-complete`.
 
@@ -43,3 +46,5 @@
 - `AGENTS.md` stays short; detailed reasoning belongs in `docs/`.
 - Do not leave `TODO`, `TBD`, or empty headings in required docs.
 - Code or config changes must map back to the current `task_id`.
+- Design work must update the design docs before the UI is treated as complete.
+- Polished UI or flow work is not complete until the browser review checklist has been executed and evidence has been recorded.
