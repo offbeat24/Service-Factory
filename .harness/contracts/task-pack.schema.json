@@ -54,6 +54,11 @@
           "contains": {
             "const": "docs/design/browser-review.kr.md"
           }
+        },
+        {
+          "contains": {
+            "const": "docs/prompting/prompt-context.kr.md"
+          }
         }
       ]
     },
@@ -88,6 +93,11 @@
         {
           "contains": {
             "const": "docs/design/browser-review.kr.md"
+          }
+        },
+        {
+          "contains": {
+            "const": "docs/prompting/prompt-context.kr.md"
           }
         }
       ]

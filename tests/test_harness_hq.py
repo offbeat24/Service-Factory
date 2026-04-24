@@ -58,10 +58,11 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / "docs" / "design" / "art-direction.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "browser-review.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "ui-principles.kr.md").exists())
+            self.assertTrue((repo / "docs" / "prompting" / "prompt-context.kr.md").exists())
             self.assertTrue((repo / "scripts" / "harness.py").exists())
             config_text = (repo / ".codex" / "config.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.4"', config_text)
-            self.assertIn('review_model = "gpt-5.4"', config_text)
+            self.assertIn('model = "gpt-5.5"', config_text)
+            self.assertIn('review_model = "gpt-5.5"', config_text)
             self.assertIn("max_depth = 1", config_text)
             self.assertEqual((repo / ".nvmrc").read_text(encoding="utf-8").strip(), "20.19.6")
             self.assertEqual((repo / ".node-version").read_text(encoding="utf-8").strip(), "20.19.6")
@@ -77,6 +78,9 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("Switch Codex to this generated repo", readme_text)
             self.assertIn("feature/BOOTSTRAP-001-init", readme_text)
             self.assertIn("git config commit.template .gitmessage.txt", readme_text)
+            prompt_context_text = (repo / "docs" / "prompting" / "prompt-context.kr.md").read_text(encoding="utf-8")
+            self.assertIn("서비스 이름: Focus Sprint", prompt_context_text)
+            self.assertIn("톤: sharp and disciplined", prompt_context_text)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-setup-") as tmpdir:
@@ -127,7 +131,7 @@ class HarnessHQTests(unittest.TestCase):
                     {
                         "task_id": "BOOTSTRAP-001",
                         "provider": "openai",
-                        "lead_model": "gpt-5.4",
+                        "lead_model": "gpt-5.5",
                         "worker_models": ["gpt-5.4-mini"],
                         "changed_scope": ["docs/product/product-spec.kr.md"],
                         "verification_results": [{"name": "pre-complete", "status": "passed"}],
@@ -143,6 +147,28 @@ class HarnessHQTests(unittest.TestCase):
             )
 
             run([sys.executable, "scripts/harness.py", "pre-complete"], repo)
+
+    def test_generated_repo_syncs_prompt_context_from_service_yaml(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="harness-prompt-context-") as tmpdir:
+            output_root = Path(tmpdir) / "out"
+            run(
+                [
+                    sys.executable,
+                    str(GENERATOR),
+                    "--spec",
+                    str(EXAMPLE_SPEC),
+                    "--output-root",
+                    str(output_root),
+                ],
+                ROOT,
+            )
+            repo = output_root / "focus-sprint"
+            service_yaml = (repo / "service.yaml").read_text(encoding="utf-8")
+            service_yaml = service_yaml.replace("  tone: sharp and disciplined\n", "  tone: precise and calm\n")
+            (repo / "service.yaml").write_text(service_yaml, encoding="utf-8")
+            run([sys.executable, "scripts/harness.py", "sync-prompt-context", "--task-id", "BOOTSTRAP-001"], repo)
+            prompt_context_text = (repo / "docs" / "prompting" / "prompt-context.kr.md").read_text(encoding="utf-8")
+            self.assertIn("톤: precise and calm", prompt_context_text)
 
     def test_generated_repo_rejects_incomplete_branding(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-branding-") as tmpdir:

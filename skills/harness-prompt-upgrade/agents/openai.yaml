@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Prompt Upgrade"
+  short_description: "OpenAI 업데이트 반영 후보 목록화"
+  default_prompt: "Use $harness-prompt-upgrade to review recent OpenAI or Codex updates and list candidate harness prompt upgrades before making changes."
+
+policy:
+  allow_implicit_invocation: true

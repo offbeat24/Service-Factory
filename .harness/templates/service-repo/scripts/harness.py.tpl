@@ -67,7 +67,9 @@ REQUIRED_TASK_PACK_READS = [
     "docs/design/art-direction.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
+    "docs/prompting/prompt-context.kr.md",
 ]
+PROMPT_CONTEXT_PATH = ROOT / "docs" / "prompting" / "prompt-context.kr.md"
 
 
 class ValidationError(RuntimeError):
@@ -124,6 +126,164 @@ def infer_task_id(explicit: str | None) -> str:
 
 def normalize_path(path: str) -> str:
     return path.replace("\\", "/")
+
+
+def flatten_value(value: Any) -> str:
+    if isinstance(value, list):
+        return ", ".join(flatten_value(entry) for entry in value)
+    if isinstance(value, dict):
+        return ", ".join(f"{key}={flatten_value(entry)}" for key, entry in value.items())
+    return str(value)
+
+
+def render_list(values: Any, default: str) -> str:
+    if isinstance(values, list) and values:
+        return "\n".join(f"- {flatten_value(value)}" for value in values)
+    return f"- {default}"
+
+
+def render_mapping(mapping: Any, default: str) -> str:
+    if isinstance(mapping, dict) and mapping:
+        return "\n".join(f"- {key}: {flatten_value(value)}" for key, value in mapping.items())
+    return f"- {default}"
+
+
+def markdown_sections(path: Path) -> dict[str, list[str]]:
+    if not path.exists():
+        return {}
+    sections: dict[str, list[str]] = {}
+    current_heading: str | None = None
+    current_lines: list[str] = []
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        if raw_line.startswith("## "):
+            if current_heading is not None:
+                sections[current_heading] = current_lines
+            current_heading = raw_line[3:].strip()
+            current_lines = []
+            continue
+        if current_heading is not None:
+            current_lines.append(raw_line.rstrip())
+    if current_heading is not None:
+        sections[current_heading] = current_lines
+    return sections
+
+
+def compact_markdown_lines(lines: list[str], limit: int = 2) -> list[str]:
+    compacted: list[str] = []
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("- "):
+            stripped = stripped[2:].strip()
+        compacted.append(stripped)
+        if len(compacted) >= limit:
+            break
+    return compacted
+
+
+def summarize_sections(path: Path, headings: list[str], default: str) -> str:
+    sections = markdown_sections(path)
+    summary: list[str] = []
+    for heading in headings:
+        lines = compact_markdown_lines(sections.get(heading, []))
+        if not lines:
+            continue
+        summary.append(f"- [{heading}] {lines[0]}")
+        for extra in lines[1:]:
+            summary.append(f"- {extra}")
+    if not summary:
+        return f"- {default}"
+    return "\n".join(summary)
+
+
+def sync_prompt_context(task_id: str | None = None) -> None:
+    payload = load_yaml(ROOT / "service.yaml")
+    if not isinstance(payload, dict):
+        raise ValidationError("service.yaml must be a YAML mapping")
+
+    try:
+        effective_task_id = infer_task_id(task_id)
+    except ValidationError:
+        effective_task_id = task_id or "UNKNOWN"
+
+    product_spec_path = ROOT / "docs" / "product" / "product-spec.kr.md"
+    art_direction_path = ROOT / "docs" / "design" / "art-direction.kr.md"
+    ui_principles_path = ROOT / "docs" / "design" / "ui-principles.kr.md"
+    architecture_path = ROOT / "docs" / "architecture" / "why.kr.md"
+    exec_plan_path = ROOT / "docs" / "exec-plans" / "active" / f"{effective_task_id}.kr.md"
+    branding = payload.get("branding") if isinstance(payload.get("branding"), dict) else {}
+    branch = branch_name() or "UNKNOWN"
+
+    prompt_context = f"""# 프롬프트 컨텍스트
+
+## 문서 목적
+
+- 이 문서는 `service.yaml`과 핵심 설계 문서를 프롬프트 친화적인 요약으로 압축한다.
+- 상세 판단은 원문 문서를 우선으로 하고, 이 문서는 세션 시작과 검증 시점의 빠른 맥락 복구에 사용한다.
+
+## 서비스 핵심
+
+- 서비스 이름: {payload.get("name", "UNKNOWN")}
+- 서비스 ID: {payload.get("id", "UNKNOWN")}
+- 컨셉: {payload.get("concept", "UNKNOWN")}
+- 문제 정의: {payload.get("problem", "UNKNOWN")}
+- 타깃 사용자:
+{render_list(payload.get("target_users"), "타깃 사용자를 service.yaml에 보강한다.")}
+- 핵심 페이지:
+{render_list(payload.get("pages"), "핵심 페이지를 service.yaml에 보강한다.")}
+- 핵심 플로우:
+{render_list(payload.get("core_flows"), "핵심 플로우를 service.yaml에 보강한다.")}
+- 성공 지표:
+{render_list(payload.get("success_metrics"), "성공 지표를 service.yaml에 보강한다.")}
+
+## 디자인/UX 기준
+
+- 톤: {flatten_value(branding.get("tone", "명시 필요"))}
+- 비주얼 방향: {flatten_value(branding.get("visual_direction", "명시 필요"))}
+- 키워드:
+{render_list(branding.get("keywords"), "브랜드 키워드를 service.yaml에 보강한다.")}
+- 컬러 토큰:
+{render_mapping(branding.get("palette"), "컬러 토큰을 service.yaml에 보강한다.")}
+- 타이포그래피:
+{render_mapping(branding.get("typography"), "타이포그래피 기준을 service.yaml에 보강한다.")}
+- 레이아웃 원칙:
+{render_list(branding.get("layout_principles"), "레이아웃 원칙을 service.yaml에 보강한다.")}
+- 컴포넌트 규칙:
+{render_list(branding.get("component_rules"), "컴포넌트 규칙을 service.yaml에 보강한다.")}
+- 모션:
+{render_mapping(branding.get("motion"), "모션 기준을 service.yaml에 보강한다.")}
+
+## Deck 문서 반영 메모
+
+### product-spec
+
+{summarize_sections(product_spec_path, ["서비스 개요", "타깃 사용자", "문제 정의", "핵심 플로우", "성공 지표"], "product-spec 문서를 보강한다.")}
+
+### design
+
+{summarize_sections(art_direction_path, ["디자인 목표", "참고 레퍼런스", "피해야 할 패턴", "컬러 토큰"], "art-direction 문서를 보강한다.")}
+{summarize_sections(ui_principles_path, ["레이아웃 원칙", "컴포넌트 규칙", "모션 원칙", "반응형 규칙"], "ui-principles 문서를 보강한다.")}
+
+### architecture
+
+{summarize_sections(architecture_path, ["구조 원칙", "기본 스택", "예외와 override"], "architecture 문서를 보강한다.")}
+
+## 작업 컨텍스트
+
+- 현재 브랜치: `{branch}`
+- 현재 task id: `{effective_task_id}`
+- active exec plan 요약:
+{summarize_sections(exec_plan_path, ["목표", "범위", "제약", "검증 방법"], "active exec plan을 최신 상태로 유지한다.")}
+
+## 프롬프트 적용 규칙
+
+- 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
+- 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
+- deck 내부 문서와 충돌하는 오래된 기억이나 일반론보다 현재 repo 문서를 우선한다.
+"""
+    PROMPT_CONTEXT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    PROMPT_CONTEXT_PATH.write_text(prompt_context + "\n", encoding="utf-8")
 
 
 def changed_files(mode: str) -> list[str]:
@@ -295,6 +455,7 @@ def validate_task_markers(task_id: str, mode: str) -> None:
 
 
 def run_pre_task(task_id: str) -> None:
+    sync_prompt_context(task_id)
     validate_required_docs()
     validate_service_yaml()
     validate_task_pack(task_id)
@@ -311,12 +472,13 @@ def codex_session_start() -> int:
         task_id = infer_task_id(None)
     except ValidationError:
         task_id = "UNKNOWN"
+    sync_prompt_context(task_id)
     payload = {
         "continue": True,
         "systemMessage": f"Current task context: {task_id}. Keep work scoped and update task-bound docs before stopping.",
         "hookSpecificOutput": {
           "hookEventName": "SessionStart",
-          "additionalContext": "Run python3 scripts/harness.py pre-task before edits and pre-complete before ending the task."
+          "additionalContext": "Read docs/prompting/prompt-context.kr.md, then run python3 scripts/harness.py pre-task before edits and pre-complete before ending the task."
         }
     }
     print(json.dumps(payload))
@@ -359,6 +521,7 @@ def parse_args() -> argparse.Namespace:
         choices=[
             "pre-task",
             "pre-complete",
+            "sync-prompt-context",
             "pre-commit",
             "ci",
             "codex-session-start",
@@ -378,6 +541,9 @@ def main() -> int:
         return codex_pre_tool_use()
     if args.mode == "codex-stop":
         return codex_stop()
+    if args.mode == "sync-prompt-context":
+        sync_prompt_context(args.task_id)
+        return 0
 
     task_id = infer_task_id(args.task_id)
     try:

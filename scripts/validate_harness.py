@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS_ROOT = ROOT / ".harness" / "contracts"
 TEMPLATE_ROOT = ROOT / ".harness" / "templates" / "service-repo"
 EXAMPLES_ROOT = ROOT / "examples"
-EXPECTED_LEAD_MODEL = "gpt-5.4"
+EXPECTED_LEAD_MODEL = "gpt-5.5"
 EXPECTED_WORKER_MODEL = "gpt-5.4-mini"
 REQUIRED_BRANDING_FIELDS = [
     "tone",
@@ -33,6 +33,7 @@ REQUIRED_TASK_PACK_READS = [
     "docs/design/art-direction.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
+    "docs/prompting/prompt-context.kr.md",
 ]
 REQUIRED_TEMPLATES = [
     "AGENTS.md.tpl",
@@ -55,6 +56,7 @@ REQUIRED_TEMPLATES = [
     "docs/design/art-direction.kr.md.tpl",
     "docs/design/browser-review.kr.md.tpl",
     "docs/design/ui-principles.kr.md.tpl",
+    "docs/prompting/prompt-context.kr.md.tpl",
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md.tpl",
     "docs/exec-plans/completed/INIT-000.kr.md.tpl",
     "docs/build-journal.kr.md.tpl",
@@ -280,16 +282,16 @@ def validate_codex_policy_files() -> None:
         "HQ doc_gardener agent model does not match HQ policy",
     )
     ensure(
-        toml_string_value(hq_ui_checker, None, "model") == EXPECTED_WORKER_MODEL,
-        "HQ ui_checker agent model does not match HQ policy",
+        toml_string_value(hq_ui_checker, None, "model") == EXPECTED_LEAD_MODEL,
+        "HQ ui_checker agent model does not match design/development model policy",
     )
     ensure(
         toml_string_value(template_doc_gardener, None, "model") == EXPECTED_WORKER_MODEL,
         "service template doc_gardener agent model does not match HQ policy",
     )
     ensure(
-        toml_string_value(template_ui_checker, None, "model") == EXPECTED_WORKER_MODEL,
-        "service template ui_checker agent model does not match HQ policy",
+        toml_string_value(template_ui_checker, None, "model") == EXPECTED_LEAD_MODEL,
+        "service template ui_checker agent model does not match design/development model policy",
     )
 
     agents_text = read_text(template_agents)
@@ -356,6 +358,7 @@ def validate_dry_run_generation() -> None:
         ensure((generated / "docs" / "design" / "art-direction.kr.md").exists(), "generated art-direction doc missing")
         ensure((generated / "docs" / "design" / "browser-review.kr.md").exists(), "generated browser-review doc missing")
         ensure((generated / "docs" / "design" / "ui-principles.kr.md").exists(), "generated ui-principles doc missing")
+        ensure((generated / "docs" / "prompting" / "prompt-context.kr.md").exists(), "generated prompt-context doc missing")
         generated_depth = toml_int_value(generated / ".codex" / "config.toml", "agents", "max_depth")
         ensure(generated_depth is not None, "generated config.toml must define [agents].max_depth")
         ensure(generated_depth >= 1, "generated config.toml must set agents.max_depth >= 1")

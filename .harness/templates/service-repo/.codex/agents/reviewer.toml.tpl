@@ -1,6 +1,6 @@
 name = "reviewer"
 description = "High-judgment reviewer for correctness, regression risk, and missing tests."
-model = "gpt-5.4"
+model = "gpt-5.5"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

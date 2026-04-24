@@ -45,7 +45,7 @@ REQUIRED_SERVICE_FIELDS = [
 
 BOOTSTRAP_TASK_ID = "BOOTSTRAP-001"
 INIT_TASK_ID = "INIT-000"
-LEAD_MODEL = "gpt-5.4"
+LEAD_MODEL = "gpt-5.5"
 WORKER_MODEL = "gpt-5.4-mini"
 DEFAULT_NODE_VERSION = "20.19.6"
 DEFAULT_NODE_LABEL = "Node 20.19.6 LTS"
@@ -253,6 +253,7 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                     "AGENTS.md",
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
                     "docs/product/product-spec.kr.md",
+                    "docs/prompting/prompt-context.kr.md",
                     "docs/design/art-direction.kr.md",
                     "docs/design/ui-principles.kr.md",
                     "docs/design/browser-review.kr.md",
@@ -271,6 +272,7 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 ],
                 "docs_required": [
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
+                    "docs/prompting/prompt-context.kr.md",
                     "docs/design/art-direction.kr.md",
                     "docs/design/ui-principles.kr.md",
                     "docs/design/browser-review.kr.md",

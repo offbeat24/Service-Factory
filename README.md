@@ -6,6 +6,7 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 
 - `AGENTS.md`: short map for coding agents
 - `.codex/`: Codex runtime defaults, hooks, and custom agent definitions for HQ work
+- `skills/`: repo-versioned Codex skills for Harness-specific upgrade workflows
 - `.harness/contracts/`: machine-readable contracts for `service.yaml`, `task-pack.json`, `run-report.json`, and `docs-manifest.json`
 - `.harness/templates/service-repo/`: the template used to create each service repository
 - `scripts/`: HQ generation and validation tooling
@@ -32,7 +33,7 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 
 - Runtime: Codex CLI/App
 - Provider: OpenAI only
-- Lead/review model policy: `gpt-5.4`
+- Design/development lead and review model policy: `gpt-5.5`
 - Supporting worker policy: `gpt-5.4-mini`
 - Generated service repos use `agents.max_depth = 1` so the root agent can run under current Codex while nested workers remain disallowed by repo policy.
 - Default runtime policy for generated repos: `Node 20.19.6 LTS`
@@ -42,6 +43,7 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 - Generated service repos include a commit message template and commit-msg hook for `<type>: <subject>` style messages.
 - Generated service repos include `.nvmrc` and `.node-version` pinned to the HQ runtime default.
 - Generated service repos include design docs for art direction and UI principles.
+- Generated service repos include `docs/prompting/prompt-context.kr.md`, a prompt-ready summary regenerated from `service.yaml` and the deck docs.
 - Generated service repos include a browser-review checklist for design and functional iteration in the running app.
 - Documentation policy: Korean for internal operating docs, English for public case studies
 

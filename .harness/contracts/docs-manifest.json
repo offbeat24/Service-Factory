@@ -68,6 +68,17 @@
       ]
     },
     {
+      "path": "docs/prompting/prompt-context.kr.md",
+      "sections": [
+        "문서 목적",
+        "서비스 핵심",
+        "디자인/UX 기준",
+        "Deck 문서 반영 메모",
+        "작업 컨텍스트",
+        "프롬프트 적용 규칙"
+      ]
+    },
+    {
       "path": "docs/build-journal.kr.md",
       "sections": [
         "작업 로그"

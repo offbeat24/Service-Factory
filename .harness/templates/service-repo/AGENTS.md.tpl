@@ -20,6 +20,7 @@
 - Art direction: `docs/design/art-direction.kr.md`
 - UI principles: `docs/design/ui-principles.kr.md`
 - Browser review checklist: `docs/design/browser-review.kr.md`
+- Prompt context: `docs/prompting/prompt-context.kr.md`
 - Active execution plan: `docs/exec-plans/active/{{BOOTSTRAP_TASK_ID}}.kr.md`
 - Build journal: `docs/build-journal.kr.md`
 - Architecture why: `docs/architecture/why.kr.md`
@@ -35,7 +36,7 @@
 3. Keep the main branch name as `main` and initialize with `git init -b main` if needed.
 4. Create or switch to a branch like `feature/{{BOOTSTRAP_TASK_ID}}-init`.
 5. Run `python3 scripts/harness.py pre-task`.
-6. Read the active exec plan, product spec, art direction, UI principles, and browser review checklist before editing code.
+6. Read the active exec plan, product spec, prompt context, art direction, UI principles, and browser review checklist before editing code.
 7. Keep work inside the current task scope.
 8. Use `<type>: <subject>` commit messages with the repo commit template and commit-msg hook.
 9. Before stopping, run `python3 scripts/harness.py pre-complete`.
@@ -53,4 +54,5 @@
 - Do not leave `TODO`, `TBD`, or empty headings in required docs.
 - Code or config changes must map back to the current `task_id`.
 - Design work must update the design docs before the UI is treated as complete.
+- `docs/prompting/prompt-context.kr.md` is generated context. Update source docs and rerun the harness instead of hand-maintaining summaries.
 - Polished UI or flow work is not complete until the browser review checklist has been executed and evidence has been recorded.

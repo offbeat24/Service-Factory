@@ -16,6 +16,7 @@
     "docs/design/art-direction.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
+    "docs/prompting/prompt-context.kr.md",
     "docs/architecture/why.kr.md"
   ],
   "acceptance_criteria": [
@@ -33,6 +34,7 @@
     "docs/design/art-direction.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
+    "docs/prompting/prompt-context.kr.md",
     "docs/build-journal.kr.md",
     "docs/architecture/why.kr.md",
     "docs/retrospectives/harness-feedback.kr.md"

@@ -8,6 +8,7 @@
 
 - `AGENTS.md`: 짧은 진입 문서
 - `.codex/`: HQ 작업에 적용되는 Codex 정책
+- `skills/`: HQ와 생성 레포에 적용할 수 있는 저장소 버전 관리형 Codex 스킬
 - `.harness/contracts/`: 기계가 읽는 계약
 - `.harness/templates/service-repo/`: 생성되는 서비스 레포의 초기 구조
 - `scripts/`: 생성, 검증, shim 생성 같은 운영 스크립트
@@ -19,6 +20,7 @@
 
 - 제품 스펙 하나에 디자인 의도를 몰아넣지 않는다.
 - 생성 서비스 레포에는 `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 넣는다.
+- 생성 서비스 레포에는 `docs/prompting/prompt-context.kr.md`를 두고, `service.yaml`과 deck 문서에서 자동으로 다시 만든다.
 - 생성 서비스 레포에는 런타임 기준을 명확히 하기 위해 `.nvmrc`와 `.node-version`도 함께 넣는다.
 - 생성 서비스 레포에는 브랜치/커밋 규칙을 바로 쓸 수 있도록 `.gitmessage.txt`와 필요한 git hook도 함께 넣는다.
 - 디자인 품질 판단은 감상평 대신 reference, anti-pattern, screenshot evidence, spacing/type hierarchy 메모로 남긴다.
