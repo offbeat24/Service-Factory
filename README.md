@@ -33,8 +33,13 @@ Harness HQ is the control plane for a Codex-first service factory. This reposito
 
 - Runtime: Codex CLI/App
 - Provider: OpenAI only
-- Design/development lead and review model policy: `gpt-5.5`
-- Supporting worker policy: `gpt-5.4-mini`
+- Default lead policy: `gpt-5.4` with medium reasoning for routine planning, implementation coordination, and normal product work
+- `gpt-5.5` planning/escalation policy: use high reasoning for initial product framing, architecture and data-boundary decisions, auth/billing/security choices, complex UX hierarchy, large task decomposition, failed-debug recovery plans, contract/template policy changes, and final review
+- Coding worker policy: `gpt-5.3-codex` for scoped implementation, refactors, bug fixes, and tests
+- Documentation/evidence worker policy: `gpt-5.4-mini` for low-risk documentation, summaries, and artifact bookkeeping
+- Long-running work policy: `gpt-5.2` for broad audits, migrations, and multi-file synthesis that need endurance more than frontier judgment
+- UI checker policy: `gpt-5.4` for screenshot, DOM, browser console, and flow evidence checks
+- Detailed model routing policy: `docs/operations/model-routing.kr.md`
 - Generated service repos use `agents.max_depth = 1` so the root agent can run under current Codex while nested workers remain disallowed by repo policy.
 - Default runtime policy for generated repos: `Node 20.19.6 LTS`
 - Default product stack policy for generated repos: `Next.js 16.x LTS line + React 19.x stable line + TypeScript`, `Vercel`, `Supabase/Postgres`

@@ -45,8 +45,8 @@ REQUIRED_SERVICE_FIELDS = [
 
 BOOTSTRAP_TASK_ID = "BOOTSTRAP-001"
 INIT_TASK_ID = "INIT-000"
-LEAD_MODEL = "gpt-5.5"
-WORKER_MODEL = "gpt-5.4-mini"
+LEAD_MODEL = "gpt-5.4"
+WORKER_MODELS = ["gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2"]
 DEFAULT_NODE_VERSION = "20.19.6"
 DEFAULT_NODE_LABEL = "Node 20.19.6 LTS"
 DEFAULT_NEXT_LINE = "Next.js 16.x LTS line"
@@ -290,7 +290,7 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 "task_id": INIT_TASK_ID,
                 "provider": spec["provider"],
                 "lead_model": LEAD_MODEL,
-                "worker_models": [WORKER_MODEL],
+                "worker_models": WORKER_MODELS,
                 "changed_scope": [
                     "AGENTS.md",
                     ".codex/",

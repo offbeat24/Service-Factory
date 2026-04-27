@@ -52,6 +52,9 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / ".gitmessage.txt").exists())
             self.assertTrue((repo / ".codex" / "config.toml").exists())
             self.assertTrue((repo / ".codex" / "hooks.json").exists())
+            self.assertTrue((repo / ".codex" / "agents" / "architecture-planner.toml").exists())
+            self.assertTrue((repo / ".codex" / "agents" / "implementation-worker.toml").exists())
+            self.assertTrue((repo / ".codex" / "agents" / "long-runner.toml").exists())
             self.assertTrue((repo / ".githooks" / "commit-msg").exists())
             self.assertTrue((repo / "docs-manifest.json").exists())
             self.assertTrue((repo / "docs" / "product" / "product-spec.kr.md").exists())
@@ -61,9 +64,13 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / "docs" / "prompting" / "prompt-context.kr.md").exists())
             self.assertTrue((repo / "scripts" / "harness.py").exists())
             config_text = (repo / ".codex" / "config.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.5"', config_text)
+            self.assertIn('model = "gpt-5.4"', config_text)
             self.assertIn('review_model = "gpt-5.5"', config_text)
             self.assertIn("max_depth = 1", config_text)
+            planner_text = (repo / ".codex" / "agents" / "architecture-planner.toml").read_text(encoding="utf-8")
+            self.assertIn('model = "gpt-5.5"', planner_text)
+            worker_text = (repo / ".codex" / "agents" / "implementation-worker.toml").read_text(encoding="utf-8")
+            self.assertIn('model = "gpt-5.3-codex"', worker_text)
             self.assertEqual((repo / ".nvmrc").read_text(encoding="utf-8").strip(), "20.19.6")
             self.assertEqual((repo / ".node-version").read_text(encoding="utf-8").strip(), "20.19.6")
             art_direction_text = (repo / "docs" / "design" / "art-direction.kr.md").read_text(encoding="utf-8")
@@ -131,8 +138,8 @@ class HarnessHQTests(unittest.TestCase):
                     {
                         "task_id": "BOOTSTRAP-001",
                         "provider": "openai",
-                        "lead_model": "gpt-5.5",
-                        "worker_models": ["gpt-5.4-mini"],
+                        "lead_model": "gpt-5.4",
+                        "worker_models": ["gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2"],
                         "changed_scope": ["docs/product/product-spec.kr.md"],
                         "verification_results": [{"name": "pre-complete", "status": "passed"}],
                         "evidence_paths": [],

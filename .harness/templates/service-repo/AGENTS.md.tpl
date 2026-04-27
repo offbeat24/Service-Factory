@@ -45,6 +45,10 @@
 
 - Codex must not spawn nested workers in this repo.
 - The generated `.codex/config.toml` keeps `agents.max_depth = 1` because current Codex requires depth >= 1 for the root agent to run.
+- Default root work uses `gpt-5.4`.
+- Use `architecture_planner` on `gpt-5.5` for initial product framing, architecture/data boundaries, auth/billing/security, complex UX hierarchy, large task decomposition, failed-debug recovery plans, and contract/template policy changes.
+- Use `reviewer` on `gpt-5.5` for final review and high-risk regression judgment.
+- Use `implementation_worker` on `gpt-5.3-codex` for scoped coding, `doc_gardener` on `gpt-5.4-mini` for low-risk docs/evidence, `long_runner` on `gpt-5.2` for broad audits, and `ui_checker` on `gpt-5.4` for browser evidence checks.
 - Use focused workers only when the parent explicitly asks for them.
 - Do not treat hooks as a full safety boundary. Keep human approval for production, billing, data deletion, DB migration, secrets, and infra mutation.
 

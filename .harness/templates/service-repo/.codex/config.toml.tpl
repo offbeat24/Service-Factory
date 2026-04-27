@@ -1,5 +1,5 @@
-model = "gpt-5.5"
-model_reasoning_effort = "high"
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
 review_model = "gpt-5.5"
 approval_policy = "on-request"
 sandbox_mode = "workspace-write"

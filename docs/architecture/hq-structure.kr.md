@@ -13,6 +13,7 @@
 - `.harness/templates/service-repo/`: 생성되는 서비스 레포의 초기 구조
 - `scripts/`: 생성, 검증, shim 생성 같은 운영 스크립트
 - `docs/`: 사람이 읽는 운영 문서
+- `docs/operations/model-routing.kr.md`: 작업 단계별 Codex 모델 배치 기준
 - `.gitignore`: HQ 작업 중 생기는 OS/빌드 잡파일 차단
 - `../deck/`: HQ가 생성한 서비스 레포들이 쌓이는 형제 디렉터리
 
@@ -32,6 +33,9 @@
 
 - Codex 설정은 HQ와 서비스 템플릿에서 함께 관리하고 함께 검증해야 한다.
 - 모델 핀은 Codex CLI/App 기준과 맞아야 하며, HQ와 서비스 템플릿이 같은 Codex 전용 모델군을 써야 한다.
+- 기본 루트 작업은 `gpt-5.4`로 시작한다.
+- `gpt-5.5`는 초기 제품 방향, 아키텍처/데이터 경계, 인증/결제/보안, 복잡한 UX 계층, 큰 작업 분해, 반복 실패 후 복구 계획, 계약/템플릿 정책 변경, 최종 리뷰에 승격한다.
+- 반복 구현은 `gpt-5.3-codex`, 문서와 evidence 정리는 `gpt-5.4-mini`, 긴 감사와 마이그레이션은 `gpt-5.2`에 배정한다.
 - 서비스 템플릿은 현재 Codex 런타임 제약에 맞춰 `agents.max_depth = 1`을 사용한다.
 - 생성 서비스 레포의 기본 앱 런타임은 `Node 20.19.6 LTS`, 기본 웹 스택은 `Next.js 16.x LTS line + React 19.x stable line + TypeScript`로 고정한다.
 - 생성 서비스 레포의 기본 메인 브랜치 이름은 `main`이고, task-bound 작업 브랜치는 `feature/<TASK-ID>-slug` 같은 접두사 기반 규칙을 따른다.

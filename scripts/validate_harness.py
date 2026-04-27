@@ -22,8 +22,18 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACTS_ROOT = ROOT / ".harness" / "contracts"
 TEMPLATE_ROOT = ROOT / ".harness" / "templates" / "service-repo"
 EXAMPLES_ROOT = ROOT / "examples"
-EXPECTED_LEAD_MODEL = "gpt-5.5"
-EXPECTED_WORKER_MODEL = "gpt-5.4-mini"
+EXPECTED_LEAD_MODEL = "gpt-5.4"
+EXPECTED_REVIEW_MODEL = "gpt-5.5"
+EXPECTED_PLANNER_MODEL = "gpt-5.5"
+EXPECTED_DOC_MODEL = "gpt-5.4-mini"
+EXPECTED_CODING_WORKER_MODEL = "gpt-5.3-codex"
+EXPECTED_LONG_RUNNER_MODEL = "gpt-5.2"
+EXPECTED_UI_CHECKER_MODEL = "gpt-5.4"
+EXPECTED_WORKER_MODELS = [
+    EXPECTED_DOC_MODEL,
+    EXPECTED_CODING_WORKER_MODEL,
+    EXPECTED_LONG_RUNNER_MODEL,
+]
 REQUIRED_BRANDING_FIELDS = [
     "tone",
     "visual_direction",
@@ -44,9 +54,12 @@ REQUIRED_TEMPLATES = [
     ".gitmessage.txt.tpl",
     ".codex/config.toml.tpl",
     ".codex/hooks.json.tpl",
+    ".codex/agents/architecture-planner.toml.tpl",
     ".codex/agents/reviewer.toml.tpl",
     ".codex/agents/ui-checker.toml.tpl",
     ".codex/agents/doc-gardener.toml.tpl",
+    ".codex/agents/implementation-worker.toml.tpl",
+    ".codex/agents/long-runner.toml.tpl",
     ".github/workflows/harness.yml.tpl",
     ".githooks/pre-commit.tpl",
     ".githooks/commit-msg.tpl",
@@ -218,7 +231,7 @@ def validate_run_report(path: Path) -> None:
     ensure(not missing, f"example run-report.json missing fields: {', '.join(missing)}")
     ensure(payload["lead_model"] == EXPECTED_LEAD_MODEL, "example run-report.json lead_model does not match HQ policy")
     ensure(
-        payload["worker_models"] == [EXPECTED_WORKER_MODEL],
+        payload["worker_models"] == EXPECTED_WORKER_MODELS,
         "example run-report.json worker_models do not match HQ policy",
     )
 
@@ -244,12 +257,18 @@ def validate_codex_policy_files() -> None:
     hq_config = ROOT / ".codex" / "config.toml"
     template_config = TEMPLATE_ROOT / ".codex" / "config.toml.tpl"
     template_agents = TEMPLATE_ROOT / "AGENTS.md.tpl"
+    hq_architecture_planner = ROOT / ".codex" / "agents" / "architecture-planner.toml"
     hq_reviewer = ROOT / ".codex" / "agents" / "reviewer.toml"
     hq_doc_gardener = ROOT / ".codex" / "agents" / "doc-gardener.toml"
     hq_ui_checker = ROOT / ".codex" / "agents" / "ui-checker.toml"
+    hq_implementation_worker = ROOT / ".codex" / "agents" / "implementation-worker.toml"
+    hq_long_runner = ROOT / ".codex" / "agents" / "long-runner.toml"
+    template_architecture_planner = TEMPLATE_ROOT / ".codex" / "agents" / "architecture-planner.toml.tpl"
     template_reviewer = TEMPLATE_ROOT / ".codex" / "agents" / "reviewer.toml.tpl"
     template_doc_gardener = TEMPLATE_ROOT / ".codex" / "agents" / "doc-gardener.toml.tpl"
     template_ui_checker = TEMPLATE_ROOT / ".codex" / "agents" / "ui-checker.toml.tpl"
+    template_implementation_worker = TEMPLATE_ROOT / ".codex" / "agents" / "implementation-worker.toml.tpl"
+    template_long_runner = TEMPLATE_ROOT / ".codex" / "agents" / "long-runner.toml.tpl"
 
     hq_depth = toml_int_value(hq_config, "agents", "max_depth")
     template_depth = toml_int_value(template_config, "agents", "max_depth")
@@ -263,35 +282,59 @@ def validate_codex_policy_files() -> None:
     ensure(template_depth is not None, "service template .codex/config.toml.tpl must define [agents].max_depth")
     ensure(template_depth >= 1, "service template .codex/config.toml.tpl must set agents.max_depth >= 1")
     ensure(hq_model == EXPECTED_LEAD_MODEL, "HQ .codex/config.toml model does not match HQ policy")
-    ensure(hq_review_model == EXPECTED_LEAD_MODEL, "HQ .codex/config.toml review_model does not match HQ policy")
+    ensure(hq_review_model == EXPECTED_REVIEW_MODEL, "HQ .codex/config.toml review_model does not match HQ policy")
     ensure(template_model == EXPECTED_LEAD_MODEL, "service template .codex/config.toml.tpl model does not match HQ policy")
     ensure(
-        template_review_model == EXPECTED_LEAD_MODEL,
+        template_review_model == EXPECTED_REVIEW_MODEL,
         "service template .codex/config.toml.tpl review_model does not match HQ policy",
     )
     ensure(
-        toml_string_value(hq_reviewer, None, "model") == EXPECTED_LEAD_MODEL,
+        toml_string_value(hq_architecture_planner, None, "model") == EXPECTED_PLANNER_MODEL,
+        "HQ architecture_planner agent model does not match planning escalation policy",
+    )
+    ensure(
+        toml_string_value(template_architecture_planner, None, "model") == EXPECTED_PLANNER_MODEL,
+        "service template architecture_planner agent model does not match planning escalation policy",
+    )
+    ensure(
+        toml_string_value(hq_reviewer, None, "model") == EXPECTED_REVIEW_MODEL,
         "HQ reviewer agent model does not match HQ policy",
     )
     ensure(
-        toml_string_value(template_reviewer, None, "model") == EXPECTED_LEAD_MODEL,
+        toml_string_value(template_reviewer, None, "model") == EXPECTED_REVIEW_MODEL,
         "service template reviewer agent model does not match HQ policy",
     )
     ensure(
-        toml_string_value(hq_doc_gardener, None, "model") == EXPECTED_WORKER_MODEL,
+        toml_string_value(hq_doc_gardener, None, "model") == EXPECTED_DOC_MODEL,
         "HQ doc_gardener agent model does not match HQ policy",
     )
     ensure(
-        toml_string_value(hq_ui_checker, None, "model") == EXPECTED_LEAD_MODEL,
+        toml_string_value(hq_ui_checker, None, "model") == EXPECTED_UI_CHECKER_MODEL,
         "HQ ui_checker agent model does not match design/development model policy",
     )
     ensure(
-        toml_string_value(template_doc_gardener, None, "model") == EXPECTED_WORKER_MODEL,
+        toml_string_value(hq_implementation_worker, None, "model") == EXPECTED_CODING_WORKER_MODEL,
+        "HQ implementation_worker agent model does not match coding worker policy",
+    )
+    ensure(
+        toml_string_value(hq_long_runner, None, "model") == EXPECTED_LONG_RUNNER_MODEL,
+        "HQ long_runner agent model does not match long-running work policy",
+    )
+    ensure(
+        toml_string_value(template_doc_gardener, None, "model") == EXPECTED_DOC_MODEL,
         "service template doc_gardener agent model does not match HQ policy",
     )
     ensure(
-        toml_string_value(template_ui_checker, None, "model") == EXPECTED_LEAD_MODEL,
+        toml_string_value(template_ui_checker, None, "model") == EXPECTED_UI_CHECKER_MODEL,
         "service template ui_checker agent model does not match design/development model policy",
+    )
+    ensure(
+        toml_string_value(template_implementation_worker, None, "model") == EXPECTED_CODING_WORKER_MODEL,
+        "service template implementation_worker agent model does not match coding worker policy",
+    )
+    ensure(
+        toml_string_value(template_long_runner, None, "model") == EXPECTED_LONG_RUNNER_MODEL,
+        "service template long_runner agent model does not match long-running work policy",
     )
 
     agents_text = read_text(template_agents)
@@ -299,6 +342,11 @@ def validate_codex_policy_files() -> None:
         "Codex must not spawn nested workers in this repo." in agents_text,
         "service template AGENTS.md.tpl must keep the nested-worker policy statement",
     )
+    for agent_name in ["architecture_planner", "implementation_worker", "long_runner", "ui_checker", "doc_gardener"]:
+        ensure(
+            agent_name in agents_text,
+            f"service template AGENTS.md.tpl must mention {agent_name} model routing",
+        )
 
 
 def validate_repo_hygiene() -> None:
@@ -352,6 +400,15 @@ def validate_dry_run_generation() -> None:
         ensure((generated / ".gitmessage.txt").exists(), "generated .gitmessage.txt missing")
         ensure((generated / ".codex" / "config.toml").exists(), "generated config.toml missing")
         ensure((generated / ".codex" / "hooks.json").exists(), "generated hooks.json missing")
+        for agent_file in [
+            "architecture-planner.toml",
+            "reviewer.toml",
+            "ui-checker.toml",
+            "doc-gardener.toml",
+            "implementation-worker.toml",
+            "long-runner.toml",
+        ]:
+            ensure((generated / ".codex" / "agents" / agent_file).exists(), f"generated agent file missing: {agent_file}")
         ensure((generated / ".githooks" / "commit-msg").exists(), "generated commit-msg hook missing")
         ensure((generated / "service.yaml").exists(), "generated service.yaml missing")
         ensure((generated / "docs-manifest.json").exists(), "generated docs-manifest.json missing")
@@ -367,7 +424,7 @@ def validate_dry_run_generation() -> None:
             "generated config.toml model does not match HQ policy",
         )
         ensure(
-            toml_string_value(generated / ".codex" / "config.toml", None, "review_model") == EXPECTED_LEAD_MODEL,
+            toml_string_value(generated / ".codex" / "config.toml", None, "review_model") == EXPECTED_REVIEW_MODEL,
             "generated config.toml review_model does not match HQ policy",
         )
 

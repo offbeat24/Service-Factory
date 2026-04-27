@@ -1,9 +1,11 @@
 {
   "task_id": "BOOTSTRAP-001",
   "provider": "openai",
-  "lead_model": "gpt-5.5",
+  "lead_model": "gpt-5.4",
   "worker_models": [
-    "gpt-5.4-mini"
+    "gpt-5.4-mini",
+    "gpt-5.3-codex",
+    "gpt-5.2"
   ],
   "changed_scope": [
     "docs/product/product-spec.kr.md",
