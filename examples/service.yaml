@@ -41,8 +41,10 @@ branding:
     surface: "#FFFDF9"
     text: "#111111"
   typography:
-    headings: high-contrast serif
-    body: clean sans
+    korean: Pretendard
+    english: Inter
+    headings: Inter or Pretendard semibold by language
+    body: Inter or Pretendard regular by language
     density: comfortable
   motion:
     style: restrained

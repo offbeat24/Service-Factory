@@ -254,6 +254,13 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 - 모션:
 {render_mapping(branding.get("motion"), "모션 기준을 service.yaml에 보강한다.")}
 
+## 디자인 구현 규칙
+
+- 기본 구현 폰트는 국문 Pretendard, 영문 Inter로 고정한다.
+- 테마상 다른 글꼴이 필요할 때만 예외를 허용하고 art direction에 이유와 적용 범위를 남긴다.
+- 웹 디자인은 구현 전에 Codex가 이미지 기반 비주얼 초안을 먼저 생성한다.
+- 필요한 경우 생성 이미지를 실제 UI 자산으로 활용하고, 브라우저 리뷰에서 초안과 구현 결과를 대조한다.
+
 ## Deck 문서 반영 메모
 
 ### product-spec
@@ -262,8 +269,8 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
 ### design
 
-{summarize_sections(art_direction_path, ["디자인 목표", "참고 레퍼런스", "피해야 할 패턴", "컬러 토큰"], "art-direction 문서를 보강한다.")}
-{summarize_sections(ui_principles_path, ["레이아웃 원칙", "컴포넌트 규칙", "모션 원칙", "반응형 규칙"], "ui-principles 문서를 보강한다.")}
+{summarize_sections(art_direction_path, ["디자인 목표", "참고 레퍼런스", "피해야 할 패턴", "컬러 토큰", "타이포그래피 정책", "비주얼 초안 생성 절차"], "art-direction 문서를 보강한다.")}
+{summarize_sections(ui_principles_path, ["레이아웃 원칙", "컴포넌트 규칙", "모션 원칙", "반응형 규칙", "디자인 구현 절차"], "ui-principles 문서를 보강한다.")}
 
 ### architecture
 
@@ -280,6 +287,7 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
 - 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
 - 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
+- UI 구현 전 Codex가 이미지 기반 비주얼 초안을 만들고, 기본 폰트는 국문 Pretendard와 영문 Inter를 사용한다.
 - deck 내부 문서와 충돌하는 오래된 기억이나 일반론보다 현재 repo 문서를 우선한다.
 """
     PROMPT_CONTEXT_PATH.parent.mkdir(parents=True, exist_ok=True)
