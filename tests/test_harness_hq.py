@@ -69,6 +69,8 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("max_depth = 1", config_text)
             planner_text = (repo / ".codex" / "agents" / "architecture-planner.toml").read_text(encoding="utf-8")
             self.assertIn('model = "gpt-5.5"', planner_text)
+            ui_checker_text = (repo / ".codex" / "agents" / "ui-checker.toml").read_text(encoding="utf-8")
+            self.assertIn('model = "gpt-5.5"', ui_checker_text)
             worker_text = (repo / ".codex" / "agents" / "implementation-worker.toml").read_text(encoding="utf-8")
             self.assertIn('model = "gpt-5.3-codex"', worker_text)
             self.assertEqual((repo / ".nvmrc").read_text(encoding="utf-8").strip(), "20.19.6")
@@ -85,9 +87,18 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("Switch Codex to this generated repo", readme_text)
             self.assertIn("feature/BOOTSTRAP-001-init", readme_text)
             self.assertIn("git config commit.template .gitmessage.txt", readme_text)
+            self.assertIn("observe -> plan -> execute -> verify -> record", readme_text)
+            self.assertIn("Image-related default model: `gpt-5.5`", readme_text)
+            agents_text = (repo / "AGENTS.md").read_text(encoding="utf-8")
+            self.assertIn("Default to a single lead agent.", agents_text)
+            self.assertIn("Use web or official external tools when the fact could have changed recently.", agents_text)
+            self.assertIn("For image generation drafts, image interpretation, and screenshot-based visual judgment, use the latest frontier model.", agents_text)
             prompt_context_text = (repo / "docs" / "prompting" / "prompt-context.kr.md").read_text(encoding="utf-8")
             self.assertIn("서비스 이름: Focus Sprint", prompt_context_text)
             self.assertIn("톤: sharp and disciplined", prompt_context_text)
+            self.assertIn("작업 순서: 관찰 -> 계획 -> 실행 -> 검증 -> 기록", prompt_context_text)
+            self.assertIn("이 문서는 빠른 맥락 복구용 요약이다.", prompt_context_text)
+            self.assertIn("이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다.", prompt_context_text)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-setup-") as tmpdir:

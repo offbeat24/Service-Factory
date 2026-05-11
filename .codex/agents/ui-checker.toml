@@ -1,6 +1,6 @@
 name = "ui_checker"
 description = "Fast visual and flow checker for screenshots, DOM evidence, and browser console issues."
-model = "gpt-5.4"
+model = "gpt-5.5"
 model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """

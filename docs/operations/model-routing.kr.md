@@ -7,6 +7,7 @@
 ## 모델별 강점
 
 - `gpt-5.5`: 가장 높은 판단 품질이 필요한 초기 제품/아키텍처 계획, 데이터 경계, 인증/결제/보안, 복잡한 UX 계층, 큰 작업 분해, 실패 복구 계획, 계약/템플릿 정책 변경, 최종 리뷰에 사용한다.
+- `gpt-5.5`: 이미지 생성 초안, 이미지 해석, 시각 회귀 판단, 디자인 reference 비교처럼 이미지가 핵심 입력 또는 출력인 작업의 기본 모델로도 사용한다.
 - `gpt-5.4`: 일반적인 계획, 구현 조율, UI evidence 검토, 사용성 판단에 쓰는 기본 리드 모델이다. 품질과 비용 균형을 우선한다.
 - `gpt-5.3-codex`: 코드 편집, 테스트 보강, 버그 수정, 국소 리팩터링처럼 범위가 선명한 구현 작업에 사용한다.
 - `gpt-5.4-mini`: 문서 정리, run report 초안, evidence 목록화, 단순 검색 요약처럼 실패 비용이 낮은 작업에 사용한다.
@@ -24,7 +25,10 @@
 - 테스트 실패 수정과 좁은 버그 수정: `gpt-5.3-codex`, medium reasoning
 - 두 번 이상 실패한 디버깅의 원인 재분석과 복구 계획: `architecture_planner` `gpt-5.5`, high reasoning
 - 문서 동기화, 빌드 저널, run report, evidence 정리: `gpt-5.4-mini`, medium reasoning
-- 브라우저 스크린샷, DOM, console, network evidence 점검: `ui_checker` `gpt-5.4`, medium reasoning
+- 장시간 작업 인계 문서 정리와 상태 요약: `gpt-5.4-mini`, medium reasoning
+- 이미지 생성 초안, 이미지 해석, 디자인 레퍼런스 비교: `gpt-5.5`, high reasoning
+- 브라우저 스크린샷, DOM, console, network evidence 점검: `ui_checker` `gpt-5.5`, high reasoning
+- 생성 결과의 결함 위주 최종 점검과 evaluator 성격 리뷰: `reviewer` `gpt-5.5`, high reasoning
 - 대규모 코드베이스 조사, 마이그레이션 후보 정리, 긴 비교 분석: `long_runner` `gpt-5.2`, medium reasoning
 - 계약, 템플릿, 훅, 생성 스크립트, Codex 정책 변경 전후 판단: `architecture_planner` 또는 `reviewer` `gpt-5.5`, high reasoning
 - 최종 코드 리뷰, 보안/승인 경계, 데이터 삭제/배포/과금 같은 고위험 판단: `reviewer` 또는 review model `gpt-5.5`, high reasoning
@@ -37,6 +41,7 @@
 - 여러 계약, 템플릿, 훅, 생성 스크립트를 동시에 바꿔야 한다.
 - 초기 기획 결과가 데이터 모델, 권한 체계, 수익화, 배포 구조를 바꾼다.
 - UI 방향이 핵심 전환율, onboarding, 결제 흐름, 사용자 신뢰에 직접 영향을 준다.
+- 이미지가 핵심 입력 또는 출력이어서 시각 판단 품질이 직접 결과를 좌우한다.
 - 같은 버그 수정이 두 번 이상 실패했거나 원인 가설이 갈린다.
 - 테스트는 통과하지만 설계상 회귀 가능성이 크다.
 - 모델이 서로 다른 결론을 내거나 근거가 약하다.

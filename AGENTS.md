@@ -18,6 +18,7 @@ Harness HQ is the control repo for a Codex-first service factory. It does not ho
 - Evidence policy: [docs/quality/evidence-policy.kr.md](docs/quality/evidence-policy.kr.md)
 - Approval matrix: [docs/security/approval-matrix.kr.md](docs/security/approval-matrix.kr.md)
 - Model routing policy: [docs/operations/model-routing.kr.md](docs/operations/model-routing.kr.md)
+- Prompt policy: [docs/operations/prompt-policy.kr.md](docs/operations/prompt-policy.kr.md)
 - Machine contracts: `.harness/contracts/`
 - Service repo template: `.harness/templates/service-repo/`
 
