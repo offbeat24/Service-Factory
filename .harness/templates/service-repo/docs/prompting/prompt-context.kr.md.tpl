@@ -45,6 +45,13 @@
 - 이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다. 현재 기본값은 `gpt-5.5`다.
 - 필요한 경우 생성 이미지를 실제 UI 자산으로 활용하고, 브라우저 리뷰에서 초안과 구현 결과를 대조한다.
 
+## UI 수정 운영 기준
+
+- UI 수정 요청은 가능하면 `docs/design/ui-edit-brief.kr.md`에 구조화해 유지할 것, 바꿀 것, 금지할 것을 먼저 고정한다.
+- 부분 수정에서는 좁게 수정하는 것을 기본값으로 두고, 요청하지 않은 전면 재해석은 피한다.
+- UI 수정 판단은 요청 반영 여부와 사용성 부작용 여부를 분리해 기록한다.
+- reference는 art direction 문서를 우선하고, anti-pattern은 반드시 함께 확인한다.
+
 ## Deck 문서 반영 메모
 
 ### product-spec
@@ -54,6 +61,11 @@
 ### design
 
 - `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 읽고 UI 판단에 반영한다.
+- UI 수정 작업이면 `docs/design/ui-edit-brief.kr.md`도 함께 읽고 변경 범위를 벗어나지 않게 해석한다.
+
+### prompting
+
+- UI 수정 작업이면 `docs/prompting/ui-edit-prompt-template.kr.md`를 사용해 유지 범위, 변경 범위, 금지 범위, 검증 포인트를 먼저 고정한다.
 
 ### architecture
 
@@ -89,4 +101,5 @@
 
 - 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
 - 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
+- UI 수정 요청에서는 무엇을 바꾸지 말아야 하는지부터 선언하고, 한 화면, 한 의도, 한 검증 루프로 잘게 나눈다.
 - deck 내부 문서와 충돌하는 오래된 기억이나 일반론보다 현재 repo 문서를 우선한다.

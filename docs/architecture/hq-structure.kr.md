@@ -22,13 +22,16 @@
 
 - 제품 스펙 하나에 디자인 의도를 몰아넣지 않는다.
 - 생성 서비스 레포에는 `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 넣는다.
+- 생성 서비스 레포에는 UI 수정 요청을 구조화하기 위한 `docs/design/ui-edit-brief.kr.md` 기본 문서를 함께 넣는다.
 - 생성 서비스 레포에는 `docs/prompting/prompt-context.kr.md`를 두고, `service.yaml`과 deck 문서에서 자동으로 다시 만든다.
+- 생성 서비스 레포에는 UI 수정 프롬프트를 좁은 범위로 고정하기 위한 `docs/prompting/ui-edit-prompt-template.kr.md` 기본 템플릿을 함께 넣는다.
 - 생성 서비스 레포에는 런타임 기준을 명확히 하기 위해 `.nvmrc`와 `.node-version`도 함께 넣는다.
 - 생성 서비스 레포에는 브랜치/커밋 규칙을 바로 쓸 수 있도록 `.gitmessage.txt`와 필요한 git hook도 함께 넣는다.
 - 생성 서비스 레포의 기본 구현 폰트는 국문 Pretendard, 영문 Inter로 고정하고, 테마 적합성이 명확한 예외만 art direction에 근거를 남겨 허용한다.
 - 웹 디자인은 구현 전에 Codex가 이미지 기반 비주얼 초안을 먼저 만들고, 필요한 경우 그 이미지를 실제 구현 자산으로 활용한다.
 - 디자인 품질 판단은 감상평 대신 reference, anti-pattern, screenshot evidence, spacing/type hierarchy 메모로 남긴다.
 - 브라우저에서 실제 화면과 핵심 플로우를 보고 수정하는 루프를 기본 절차로 취급한다.
+- UI 수정 통제는 긴 프롬프트 한 번보다 문서화된 수정 범위, 금지 패턴, 브라우저 비교 evidence로 다룬다.
 
 ## Codex 설정 원칙
 

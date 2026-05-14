@@ -60,8 +60,10 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
 - 생성 서비스 레포는 `<type>: <subject>` 형식의 커밋 메시지를 위한 템플릿과 `commit-msg` hook을 포함한다.
 - 생성 서비스 레포는 HQ 런타임 기본값에 맞춘 `.nvmrc`, `.node-version`을 포함한다.
 - 생성 서비스 레포는 art direction, UI principles, browser review 문서를 포함한다.
+- 생성 서비스 레포는 UI 수정 요청을 좁게 고정하기 위한 `docs/design/ui-edit-brief.kr.md` 기본 문서를 포함한다.
 - 생성 서비스 레포는 `docs/prompting/prompt-context.kr.md`를 포함한다.
   - 이 문서는 `service.yaml`과 deck 문서에서 다시 생성하는 프롬프트 친화 요약이다.
+- 생성 서비스 레포는 좁은 UI 수정 작업을 위한 `docs/prompting/ui-edit-prompt-template.kr.md` 기본 템플릿을 포함한다.
 - 생성 서비스 레포는 실행 중인 앱을 기준으로 디자인/기능 반복을 검증하기 위한 browser-review 체크리스트를 포함한다.
 - 문서 언어 정책: 내부 운영 문서는 한국어, 공개 case study는 영어
 

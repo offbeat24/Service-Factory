@@ -18,6 +18,8 @@ def build_shim(repo_root: Path) -> str:
     art_direction = read_text(repo_root / "docs" / "design" / "art-direction.kr.md")
     ui_principles = read_text(repo_root / "docs" / "design" / "ui-principles.kr.md")
     browser_review = read_text(repo_root / "docs" / "design" / "browser-review.kr.md")
+    ui_edit_brief = read_text(repo_root / "docs" / "design" / "ui-edit-brief.kr.md")
+    ui_edit_prompt_template = read_text(repo_root / "docs" / "prompting" / "ui-edit-prompt-template.kr.md")
     return "\n\n".join(
         [
             "# CLAUDE.md",
@@ -33,6 +35,10 @@ def build_shim(repo_root: Path) -> str:
             ui_principles,
             "## Imported Browser Review Checklist",
             browser_review,
+            "## Imported UI Edit Brief",
+            ui_edit_brief,
+            "## Imported UI Edit Prompt Template",
+            ui_edit_prompt_template,
         ]
     ) + "\n"
 
