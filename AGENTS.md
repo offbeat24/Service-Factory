@@ -28,8 +28,9 @@ Harness HQ is the control repo for a Codex-first service factory. It does not ho
 - Keep `AGENTS.md` short. Put detailed rules in linked docs.
 - Treat `.harness/contracts/` as the source of truth for repo generation and validation.
 - Do not add product-specific code here. Product code belongs in generated service repositories.
+- Run prompt/system structure audits with `gpt-5.5`; this includes AGENTS, `.codex`, contracts, templates, scripts, and policy docs.
 - After generating a service repository from `service.yaml`, move the active Codex work to that generated repo and keep product implementation there.
-- Generated services should keep `main` as the main branch and use prefix-based work branches such as `feature/<TASK-ID>-slug`.
+- Generated services should keep `main` as the main branch and use prefix-based work branches such as `feature/init`.
 - Update docs when you change scripts, contracts, Codex config, or repo policy.
 - Run `python3 scripts/validate_harness.py --mode all` before closing substantial HQ changes.
 

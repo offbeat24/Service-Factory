@@ -23,7 +23,7 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
 3. 이 HQ에서 형제 디렉터리 `deck/` 아래로 서비스 레포를 생성한다.
 4. 활성 Codex 대화와 작업 디렉터리를 생성된 서비스 레포로 옮긴다. 제품 구현을 HQ 안에서 계속하지 않는다.
 5. 생성된 서비스 레포에 git이 아직 없으면 `git init -b main`으로 초기화한다.
-6. 생성된 서비스 레포에서 `feature/BOOTSTRAP-001-init` 같은 작업 브랜치를 만든다.
+6. 생성된 서비스 레포에서 `feature/init` 같은 작업 브랜치를 만든다.
 7. 레포 로컬 git hooks 경로를 `git config core.hooksPath .githooks`로 설정한다.
 8. 필요하면 `git config commit.template .gitmessage.txt`로 커밋 템플릿도 켠다.
 9. 생성된 레포에서 `python3 scripts/harness.py pre-task`를 실행한다.
@@ -37,7 +37,7 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
 - 기본 리드 정책: `gpt-5.4`, medium reasoning
   - 일반 계획, 구현 조율, 보통 난도의 제품 작업에 사용한다.
 - 계획/승격 정책: `gpt-5.5`, high reasoning
-  - 초기 제품 방향, 아키텍처/데이터 경계, 인증/결제/보안, 복잡한 UX 계층, 큰 작업 분해, 실패 복구 계획, 계약/템플릿 정책 변경, 최종 리뷰에 사용한다.
+  - 초기 제품 방향, 아키텍처/데이터 경계, 인증/결제/보안, 복잡한 UX 계층, 큰 작업 분해, 실패 복구 계획, 계약/템플릿 정책 변경, 프롬프트/구조 감사, 최종 리뷰에 사용한다.
 - 코딩 worker 정책: `gpt-5.3-codex`
   - 범위가 좁은 구현, 리팩터링, 버그 수정, 테스트 보강에 사용한다.
 - 문서/evidence worker 정책: `gpt-5.4-mini`
@@ -46,6 +46,8 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
   - 긴 감사, 마이그레이션, 오래 훑는 합성 작업에 사용한다.
 - UI checker 정책: `gpt-5.5`
   - 스크린샷, DOM, 브라우저 콘솔, 플로우 evidence 점검에 사용한다.
+- 프롬프트/구조 감사 정책: `gpt-5.5`, high reasoning
+  - `AGENTS.md`, `.codex/`, `.harness/contracts/`, `.harness/templates/`, `scripts/`, `docs/operations/`를 함께 점검하는 작업은 비용 절감보다 판단 품질을 우선한다.
 - 이미지 작업 정책: 최신 상위 모델 우선
   - 이미지 생성 초안, 이미지 해석, 시각 회귀 판단, 디자인 방향 비교처럼 이미지가 핵심 입력 또는 출력인 작업은 현재 최신 모델인 `gpt-5.5`를 우선 사용한다.
 - 상세 모델 라우팅 정책: `docs/operations/model-routing.kr.md`
@@ -56,7 +58,8 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
 - 생성 서비스 레포 기본 웹 스택: `Next.js 16.x LTS line + React 19.x stable line + TypeScript`, `Vercel`, `Supabase/Postgres`
 - 생성 서비스 레포 기본 통합 브랜치: `main`
 - 생성 서비스 레포 기본 작업 브랜치 접두사: `feature/`, `bugfix/`, `hotfix/`, `experiment/`, `wip/`
-  - 브랜치 이름에는 task id를 포함한다.
+  - 브랜치 이름에는 task id를 넣지 않는다. task id는 active exec plan, `task-pack.json`, run report에서 관리한다.
+  - 브랜치명에서 task id를 추론하지 않으므로 active exec plan은 기본적으로 하나만 유지한다.
 - 생성 서비스 레포는 `<type>: <subject>` 형식의 커밋 메시지를 위한 템플릿과 `commit-msg` hook을 포함한다.
 - 생성 서비스 레포는 HQ 런타임 기본값에 맞춘 `.nvmrc`, `.node-version`을 포함한다.
 - 생성 서비스 레포는 art direction, UI principles, browser review 문서를 포함한다.
@@ -76,6 +79,7 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
   - 필요하면 테스트, 문서, evidence, run report, 리뷰 메모까지 함께 남긴다.
 - 장기 기억은 채팅이 아니라 버전 관리되는 파일과 문서에 둔다.
 - 시점 민감한 사실은 웹이나 공식 도구로 확인하고, repo 내부 정책은 외부 일반론보다 우선한다.
+- 프롬프트/구조 감사는 `gpt-5.5`로 수행하고, 결과는 문서와 검증 스크립트에 반영한다.
 - 이미지가 핵심 입력 또는 출력인 작업은 비용 절감보다 판단 품질을 우선해 최신 상위 모델로 처리한다.
 
 ## 예시 명령

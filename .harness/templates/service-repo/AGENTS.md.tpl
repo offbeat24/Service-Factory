@@ -34,7 +34,7 @@
 1. If this repo was just generated from HQ, move the active Codex conversation here before product work starts.
 2. Use Node `{{DEFAULT_NODE_VERSION}}` before npm commands.
 3. Keep the main branch name as `main` and initialize with `git init -b main` if needed.
-4. Create or switch to a branch like `feature/{{BOOTSTRAP_TASK_ID}}-init`.
+4. Create or switch to a branch like `feature/init`.
 5. Run `python3 scripts/harness.py pre-task`.
 6. Read the active exec plan, product spec, prompt context, art direction, UI principles, and browser review checklist before editing code.
 7. Keep work inside the current task scope.
@@ -53,7 +53,7 @@
 - Codex must not spawn nested workers in this repo.
 - The generated `.codex/config.toml` keeps `agents.max_depth = 1` because current Codex requires depth >= 1 for the root agent to run.
 - Default root work uses `gpt-5.4`.
-- Use `architecture_planner` on `gpt-5.5` for initial product framing, architecture/data boundaries, auth/billing/security, complex UX hierarchy, large task decomposition, failed-debug recovery plans, and contract/template policy changes.
+- Use `architecture_planner` on `gpt-5.5` for initial product framing, prompt/system structure audits, architecture/data boundaries, auth/billing/security, complex UX hierarchy, large task decomposition, failed-debug recovery plans, and contract/template policy changes.
 - Use `reviewer` on `gpt-5.5` for final review and high-risk regression judgment.
 - Use `implementation_worker` on `gpt-5.3-codex` for scoped coding, `doc_gardener` on `gpt-5.4-mini` for low-risk docs/evidence, `long_runner` on `gpt-5.2` for broad audits, and `ui_checker` on `gpt-5.5` for browser evidence checks.
 - For image generation drafts, image interpretation, and screenshot-based visual judgment, use the latest frontier model. The current default is `gpt-5.5`.
@@ -75,6 +75,7 @@
 - `AGENTS.md` stays short; detailed reasoning belongs in `docs/`.
 - Do not leave `TODO`, `TBD`, or empty headings in required docs.
 - Code or config changes must map back to the current `task_id`.
+- Because branch names do not include task ids, keep exactly one active exec plan unless a command explicitly passes `--task-id`.
 - Design work must update the design docs before the UI is treated as complete.
 - `docs/prompting/prompt-context.kr.md` is generated context. Update source docs and rerun the harness instead of hand-maintaining summaries.
 - Polished UI or flow work is not complete until the browser review checklist has been executed and evidence has been recorded.

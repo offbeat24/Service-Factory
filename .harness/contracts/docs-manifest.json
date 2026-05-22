@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "branch_pattern": "^(?:feature|feat|bugfix|fix|hotfix|experiment|exp|wip)/(?P<task_id>[A-Z0-9-]+)(?:[-_/].*)?$",
+  "branch_pattern": "^(?:feature|feat|bugfix|fix|hotfix|experiment|exp|wip)/[a-z0-9][a-z0-9._/-]*$",
   "placeholder_tokens": [
     "TODO",
     "TBD",

@@ -60,8 +60,10 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / "docs" / "product" / "product-spec.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "art-direction.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "browser-review.kr.md").exists())
+            self.assertTrue((repo / "docs" / "design" / "ui-edit-brief.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "ui-principles.kr.md").exists())
             self.assertTrue((repo / "docs" / "prompting" / "prompt-context.kr.md").exists())
+            self.assertTrue((repo / "docs" / "prompting" / "ui-edit-prompt-template.kr.md").exists())
             self.assertTrue((repo / "scripts" / "harness.py").exists())
             config_text = (repo / ".codex" / "config.toml").read_text(encoding="utf-8")
             self.assertIn('model = "gpt-5.4"', config_text)
@@ -85,12 +87,15 @@ class HarnessHQTests(unittest.TestCase):
             readme_text = (repo / "README.md").read_text(encoding="utf-8")
             self.assertIn("Node 20.19.6 LTS", readme_text)
             self.assertIn("Switch Codex to this generated repo", readme_text)
-            self.assertIn("feature/BOOTSTRAP-001-init", readme_text)
+            self.assertIn("feature/init", readme_text)
+            self.assertNotIn("feature/BOOTSTRAP-001-init", readme_text)
             self.assertIn("git config commit.template .gitmessage.txt", readme_text)
             self.assertIn("observe -> plan -> execute -> verify -> record", readme_text)
+            self.assertIn("prompt/system structure audit model: `gpt-5.5`", readme_text)
             self.assertIn("Image-related default model: `gpt-5.5`", readme_text)
             agents_text = (repo / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("Default to a single lead agent.", agents_text)
+            self.assertIn("branch names do not include task ids", agents_text)
             self.assertIn("Use web or official external tools when the fact could have changed recently.", agents_text)
             self.assertIn("For image generation drafts, image interpretation, and screenshot-based visual judgment, use the latest frontier model.", agents_text)
             prompt_context_text = (repo / "docs" / "prompting" / "prompt-context.kr.md").read_text(encoding="utf-8")
@@ -98,6 +103,7 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("톤: sharp and disciplined", prompt_context_text)
             self.assertIn("작업 순서: 관찰 -> 계획 -> 실행 -> 검증 -> 기록", prompt_context_text)
             self.assertIn("이 문서는 빠른 맥락 복구용 요약이다.", prompt_context_text)
+            self.assertIn("프롬프트/구조 감사는", prompt_context_text)
             self.assertIn("이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다.", prompt_context_text)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
@@ -285,7 +291,7 @@ class HarnessHQTests(unittest.TestCase):
         run(["git", "config", "user.email", "harness@example.com"], repo)
         run(["git", "add", "."], repo)
         run(["git", "commit", "-m", "chore: Initial scaffold"], repo)
-        run(["git", "checkout", "-b", "feature/BOOTSTRAP-001-init"], repo)
+        run(["git", "checkout", "-b", "feature/init"], repo)
 
 
 if __name__ == "__main__":

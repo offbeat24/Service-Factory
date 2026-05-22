@@ -308,7 +308,7 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 "evidence_paths": [],
                 "failures": [],
                 "handoff_notes": [
-                    "The next human or agent should keep `main` as the integration branch and create a work branch such as feature/BOOTSTRAP-001-....",
+                    "The next human or agent should keep `main` as the integration branch and create a work branch such as feature/init.",
                     "Set git hooks with `git config core.hooksPath .githooks` and optionally `git config commit.template .gitmessage.txt` before editing product code.",
                     "Run python3 scripts/harness.py pre-task before editing product code."
                 ],

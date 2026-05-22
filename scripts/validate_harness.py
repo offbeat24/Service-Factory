@@ -29,6 +29,8 @@ EXPECTED_DOC_MODEL = "gpt-5.4-mini"
 EXPECTED_CODING_WORKER_MODEL = "gpt-5.3-codex"
 EXPECTED_LONG_RUNNER_MODEL = "gpt-5.2"
 EXPECTED_UI_CHECKER_MODEL = "gpt-5.5"
+EXPECTED_PROMPT_STRUCTURE_AUDIT_MODEL = "gpt-5.5"
+EXPECTED_BRANCH_PATTERN = r"^(?:feature|feat|bugfix|fix|hotfix|experiment|exp|wip)/[a-z0-9][a-z0-9._/-]*$"
 EXPECTED_WORKER_MODELS = [
     EXPECTED_DOC_MODEL,
     EXPECTED_CODING_WORKER_MODEL,
@@ -68,8 +70,10 @@ REQUIRED_TEMPLATES = [
     "docs/product/product-spec.kr.md.tpl",
     "docs/design/art-direction.kr.md.tpl",
     "docs/design/browser-review.kr.md.tpl",
+    "docs/design/ui-edit-brief.kr.md.tpl",
     "docs/design/ui-principles.kr.md.tpl",
     "docs/prompting/prompt-context.kr.md.tpl",
+    "docs/prompting/ui-edit-prompt-template.kr.md.tpl",
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md.tpl",
     "docs/exec-plans/completed/INIT-000.kr.md.tpl",
     "docs/build-journal.kr.md.tpl",
@@ -98,6 +102,29 @@ REQUIRED_SERVICE_FIELDS = [
     "provider",
     "overrides",
     "success_metrics",
+]
+REQUIRED_TASK_PACK_FIELDS = [
+    "task_id",
+    "goal",
+    "scope",
+    "constraints",
+    "must_read",
+    "acceptance_criteria",
+    "verification_commands",
+    "docs_required",
+    "approval_required",
+]
+REQUIRED_RUN_REPORT_FIELDS = [
+    "task_id",
+    "provider",
+    "lead_model",
+    "worker_models",
+    "changed_scope",
+    "verification_results",
+    "evidence_paths",
+    "failures",
+    "handoff_notes",
+    "next_actions",
 ]
 
 DANGEROUS_COMMANDS = [
@@ -169,6 +196,12 @@ def ensure(condition: bool, message: str) -> None:
         raise SystemExit(message)
 
 
+def ensure_text_contains(path: Path, tokens: list[str], message: str) -> None:
+    text = read_text(path)
+    missing = [token for token in tokens if token not in text]
+    ensure(not missing, f"{message}: missing {', '.join(missing)}")
+
+
 def validate_service_spec(path: Path) -> None:
     payload = load_yaml(path)
     ensure(isinstance(payload, dict), "example service.yaml must be a mapping")
@@ -193,18 +226,7 @@ def validate_service_spec(path: Path) -> None:
 
 def validate_task_pack(path: Path) -> None:
     payload = load_json(path)
-    required = [
-        "task_id",
-        "goal",
-        "scope",
-        "constraints",
-        "must_read",
-        "acceptance_criteria",
-        "verification_commands",
-        "docs_required",
-        "approval_required",
-    ]
-    missing = [field for field in required if field not in payload]
+    missing = [field for field in REQUIRED_TASK_PACK_FIELDS if field not in payload]
     ensure(not missing, f"example task-pack.json missing fields: {', '.join(missing)}")
     ensure(isinstance(payload["must_read"], list), "example task-pack.json must_read must be a list")
     ensure(isinstance(payload["docs_required"], list), "example task-pack.json docs_required must be a list")
@@ -215,19 +237,7 @@ def validate_task_pack(path: Path) -> None:
 
 def validate_run_report(path: Path) -> None:
     payload = load_json(path)
-    required = [
-        "task_id",
-        "provider",
-        "lead_model",
-        "worker_models",
-        "changed_scope",
-        "verification_results",
-        "evidence_paths",
-        "failures",
-        "handoff_notes",
-        "next_actions",
-    ]
-    missing = [field for field in required if field not in payload]
+    missing = [field for field in REQUIRED_RUN_REPORT_FIELDS if field not in payload]
     ensure(not missing, f"example run-report.json missing fields: {', '.join(missing)}")
     ensure(payload["lead_model"] == EXPECTED_LEAD_MODEL, "example run-report.json lead_model does not match HQ policy")
     ensure(
@@ -237,13 +247,26 @@ def validate_run_report(path: Path) -> None:
 
 
 def validate_contracts() -> None:
-    for contract_name in [
-        "service.schema.json",
-        "task-pack.schema.json",
-        "run-report.schema.json",
-        "docs-manifest.json",
-    ]:
-        load_json(CONTRACTS_ROOT / contract_name)
+    service_schema = load_json(CONTRACTS_ROOT / "service.schema.json")
+    task_pack_schema = load_json(CONTRACTS_ROOT / "task-pack.schema.json")
+    run_report_schema = load_json(CONTRACTS_ROOT / "run-report.schema.json")
+    docs_manifest = load_json(CONTRACTS_ROOT / "docs-manifest.json")
+    ensure(
+        service_schema.get("required") == REQUIRED_SERVICE_FIELDS,
+        "service.schema.json required fields drifted from validator policy",
+    )
+    ensure(
+        task_pack_schema.get("required") == REQUIRED_TASK_PACK_FIELDS,
+        "task-pack.schema.json required fields drifted from validator policy",
+    )
+    ensure(
+        run_report_schema.get("required") == REQUIRED_RUN_REPORT_FIELDS,
+        "run-report.schema.json required fields drifted from validator policy",
+    )
+    ensure(
+        docs_manifest.get("branch_pattern") == EXPECTED_BRANCH_PATTERN,
+        "docs-manifest.json branch_pattern does not match branch naming policy",
+    )
 
 
 def validate_templates() -> None:
@@ -336,6 +359,13 @@ def validate_codex_policy_files() -> None:
         toml_string_value(template_long_runner, None, "model") == EXPECTED_LONG_RUNNER_MODEL,
         "service template long_runner agent model does not match long-running work policy",
     )
+    validate_prompt_structure_audit_policy(
+        hq_architecture_planner=hq_architecture_planner,
+        hq_reviewer=hq_reviewer,
+        template_architecture_planner=template_architecture_planner,
+        template_reviewer=template_reviewer,
+        template_agents=template_agents,
+    )
 
     agents_text = read_text(template_agents)
     ensure(
@@ -347,6 +377,46 @@ def validate_codex_policy_files() -> None:
             agent_name in agents_text,
             f"service template AGENTS.md.tpl must mention {agent_name} model routing",
         )
+
+
+def validate_prompt_structure_audit_policy(
+    *,
+    hq_architecture_planner: Path,
+    hq_reviewer: Path,
+    template_architecture_planner: Path,
+    template_reviewer: Path,
+    template_agents: Path,
+) -> None:
+    korean_policy_tokens = [
+        "프롬프트/구조 감사",
+        EXPECTED_PROMPT_STRUCTURE_AUDIT_MODEL,
+    ]
+    english_policy_tokens = [
+        "prompt/system structure",
+        EXPECTED_PROMPT_STRUCTURE_AUDIT_MODEL,
+    ]
+    for path in [
+        ROOT / "README.md",
+        ROOT / "docs" / "architecture" / "hq-structure.kr.md",
+        ROOT / "docs" / "operations" / "model-routing.kr.md",
+        ROOT / "docs" / "operations" / "prompt-policy.kr.md",
+    ]:
+        ensure_text_contains(path, korean_policy_tokens, f"{path.relative_to(ROOT)} must document prompt/structure audit routing")
+    for path in [
+        ROOT / "AGENTS.md",
+        hq_architecture_planner,
+        hq_reviewer,
+        template_architecture_planner,
+        template_reviewer,
+        template_agents,
+        TEMPLATE_ROOT / "README.md.tpl",
+    ]:
+        ensure_text_contains(path, english_policy_tokens, f"{path.relative_to(ROOT)} must enforce prompt/system structure audit routing")
+    for path in [
+        TEMPLATE_ROOT / "docs" / "prompting" / "prompt-context.kr.md.tpl",
+        TEMPLATE_ROOT / "scripts" / "harness.py.tpl",
+    ]:
+        ensure_text_contains(path, korean_policy_tokens, f"{path.relative_to(ROOT)} must document generated prompt/structure audit routing")
 
 
 def validate_repo_hygiene() -> None:
@@ -414,8 +484,13 @@ def validate_dry_run_generation() -> None:
         ensure((generated / "docs-manifest.json").exists(), "generated docs-manifest.json missing")
         ensure((generated / "docs" / "design" / "art-direction.kr.md").exists(), "generated art-direction doc missing")
         ensure((generated / "docs" / "design" / "browser-review.kr.md").exists(), "generated browser-review doc missing")
+        ensure((generated / "docs" / "design" / "ui-edit-brief.kr.md").exists(), "generated ui-edit-brief doc missing")
         ensure((generated / "docs" / "design" / "ui-principles.kr.md").exists(), "generated ui-principles doc missing")
         ensure((generated / "docs" / "prompting" / "prompt-context.kr.md").exists(), "generated prompt-context doc missing")
+        ensure(
+            (generated / "docs" / "prompting" / "ui-edit-prompt-template.kr.md").exists(),
+            "generated ui-edit-prompt-template doc missing",
+        )
         generated_depth = toml_int_value(generated / ".codex" / "config.toml", "agents", "max_depth")
         ensure(generated_depth is not None, "generated config.toml must define [agents].max_depth")
         ensure(generated_depth >= 1, "generated config.toml must set agents.max_depth >= 1")

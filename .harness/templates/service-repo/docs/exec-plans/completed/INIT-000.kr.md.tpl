@@ -12,6 +12,5 @@ Harness HQ에서 `{{SERVICE_NAME}}`의 초기 서비스 레포를 생성한다.
 
 ## 다음 단계
 
-- `task/{{BOOTSTRAP_TASK_ID}}-...` 브랜치를 만든다.
+- `feature/init` 같은 작업 브랜치를 만든다.
 - active exec plan을 읽고 첫 구현 루프를 시작한다.
-
