@@ -16,9 +16,13 @@ def build_shim(repo_root: Path) -> str:
     why = read_text(repo_root / "docs" / "architecture" / "why.kr.md")
     product = read_text(repo_root / "docs" / "product" / "product-spec.kr.md")
     art_direction = read_text(repo_root / "docs" / "design" / "art-direction.kr.md")
+    ui_intent_brief = read_text(repo_root / "docs" / "design" / "ui-intent-brief.kr.md")
+    layout_exploration = read_text(repo_root / "docs" / "design" / "layout-exploration.kr.md")
+    visual_concepts = read_text(repo_root / "docs" / "design" / "visual-concepts.kr.md")
     ui_principles = read_text(repo_root / "docs" / "design" / "ui-principles.kr.md")
     browser_review = read_text(repo_root / "docs" / "design" / "browser-review.kr.md")
     ui_edit_brief = read_text(repo_root / "docs" / "design" / "ui-edit-brief.kr.md")
+    ui_foundation_prompt_template = read_text(repo_root / "docs" / "prompting" / "ui-foundation-prompt-template.kr.md")
     ui_edit_prompt_template = read_text(repo_root / "docs" / "prompting" / "ui-edit-prompt-template.kr.md")
     return "\n\n".join(
         [
@@ -31,12 +35,20 @@ def build_shim(repo_root: Path) -> str:
             product,
             "## Imported Art Direction",
             art_direction,
+            "## Imported UI Intent Brief",
+            ui_intent_brief,
+            "## Imported Layout Exploration",
+            layout_exploration,
+            "## Imported Visual Concepts",
+            visual_concepts,
             "## Imported UI Principles",
             ui_principles,
             "## Imported Browser Review Checklist",
             browser_review,
             "## Imported UI Edit Brief",
             ui_edit_brief,
+            "## Imported UI Foundation Prompt Template",
+            ui_foundation_prompt_template,
             "## Imported UI Edit Prompt Template",
             ui_edit_prompt_template,
         ]

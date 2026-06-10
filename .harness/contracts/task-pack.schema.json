@@ -8,6 +8,11 @@
     "goal",
     "scope",
     "constraints",
+    "ui_work_type",
+    "design_phase_required",
+    "layout_exploration_required",
+    "visual_concepts_required",
+    "browser_fidelity_review_required",
     "must_read",
     "acceptance_criteria",
     "verification_commands",
@@ -33,6 +38,37 @@
       "items": {
         "type": "string"
       }
+    },
+    "ui_work_type": {
+      "type": "string",
+      "enum": [
+        "non-ui",
+        "ui-narrow-edit",
+        "ui-surface-refresh",
+        "ui-new-screen",
+        "ui-foundation"
+      ]
+    },
+    "design_phase_required": {
+      "type": "boolean"
+    },
+    "layout_exploration_required": {
+      "type": "boolean"
+    },
+    "visual_concepts_required": {
+      "type": "boolean"
+    },
+    "browser_fidelity_review_required": {
+      "type": "boolean"
+    },
+    "primary_screen": {
+      "type": "string"
+    },
+    "layout_thesis": {
+      "type": "string"
+    },
+    "visual_thesis": {
+      "type": "string"
     },
     "must_read": {
       "type": "array",

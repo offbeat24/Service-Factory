@@ -45,14 +45,34 @@
 - 국문 Pretendard, 영문 Inter 기본 폰트가 적용됐는지 확인하고, 예외가 있으면 art direction의 근거를 대조한다.
 - 초안과 다른 부분은 의도된 조정인지 결함인지 구분해서 기록한다.
 
+## fidelity 리뷰
+
+- 구현된 화면이 선택한 layout thesis처럼 읽히는가
+- 구현된 화면이 선택한 visual thesis처럼 보이는가
+- main visual anchor가 실제로 존재하는가
+- utility가 위로 기어 올라와 first view를 평평하게 만들지 않았는가
+- spacing, type contrast, surface treatment가 concept 이미지를 배반하지 않는가
+- mobile adaptation이 같은 thesis를 유지하는가, 아니면 generic stacked page로 무너졌는가
+
+## 레이아웃 안정성 판정
+
+- `layout-stable`: thesis가 분명하고 이후 수정이 detail polish 수준이다.
+- `layout-drifting`: 의도는 보이지만 hierarchy, spacing, surface treatment 중 하나가 약해졌다.
+- `layout-failed`: 구조나 first-view intent가 concept에서 크게 이탈했다.
+- `layout-stable`이 아니면 구조 조정 또는 concept 재검토를 먼저 하고 detail polish로 넘어가지 않는다.
+
 ## evidence 캡처
 
 - 비주얼 초안 이미지 또는 생성 프롬프트 경로
+- concept image 경로
+- chosen direction 메모
 - UI 수정 전 기준 스크린샷
 - 데스크톱 첫 화면 스크린샷
 - 모바일 첫 화면 스크린샷
 - 수정 후 동일 화면 비교 스크린샷
 - 비주얼 초안 대비 구현 차이 메모
+- 구현 과정에서 무엇이 concept에서 바뀌었고 왜 바뀌었는지 메모
+- thesis가 유지됐는지에 대한 판정
 - 요청 반영 여부 메모
 - 사용성 부작용 여부 메모
 - 필요하면 CTA가 보이는 추가 스크린샷

@@ -69,6 +69,18 @@ REQUIRED_TASK_PACK_READS = [
     "docs/design/browser-review.kr.md",
     "docs/prompting/prompt-context.kr.md",
 ]
+SERIOUS_UI_WORK_TYPES = {"ui-foundation", "ui-new-screen"}
+UI_WORK_TYPES = SERIOUS_UI_WORK_TYPES | {"ui-surface-refresh", "ui-narrow-edit", "non-ui"}
+SERIOUS_UI_DOCS = [
+    "docs/design/ui-intent-brief.kr.md",
+    "docs/design/layout-exploration.kr.md",
+    "docs/design/visual-concepts.kr.md",
+    "docs/prompting/ui-foundation-prompt-template.kr.md",
+]
+NARROW_UI_DOCS = [
+    "docs/design/ui-edit-brief.kr.md",
+    "docs/prompting/ui-edit-prompt-template.kr.md",
+]
 PROMPT_CONTEXT_PATH = ROOT / "docs" / "prompting" / "prompt-context.kr.md"
 
 
@@ -199,10 +211,18 @@ def summarize_sections(path: Path, headings: list[str], default: str) -> str:
     return "\n".join(summary)
 
 
+def task_pack_payload() -> dict[str, Any]:
+    payload = load_json(ROOT / "task-pack.json")
+    if not isinstance(payload, dict):
+        raise ValidationError("task-pack.json must be a JSON object")
+    return payload
+
+
 def sync_prompt_context(task_id: str | None = None) -> None:
     payload = load_yaml(ROOT / "service.yaml")
     if not isinstance(payload, dict):
         raise ValidationError("service.yaml must be a YAML mapping")
+    task_pack = task_pack_payload() if (ROOT / "task-pack.json").exists() else {}
 
     try:
         effective_task_id = infer_task_id(task_id)
@@ -211,8 +231,12 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
     product_spec_path = ROOT / "docs" / "product" / "product-spec.kr.md"
     art_direction_path = ROOT / "docs" / "design" / "art-direction.kr.md"
+    ui_intent_brief_path = ROOT / "docs" / "design" / "ui-intent-brief.kr.md"
+    layout_exploration_path = ROOT / "docs" / "design" / "layout-exploration.kr.md"
+    visual_concepts_path = ROOT / "docs" / "design" / "visual-concepts.kr.md"
     ui_principles_path = ROOT / "docs" / "design" / "ui-principles.kr.md"
     ui_edit_brief_path = ROOT / "docs" / "design" / "ui-edit-brief.kr.md"
+    ui_foundation_prompt_template_path = ROOT / "docs" / "prompting" / "ui-foundation-prompt-template.kr.md"
     ui_edit_prompt_template_path = ROOT / "docs" / "prompting" / "ui-edit-prompt-template.kr.md"
     architecture_path = ROOT / "docs" / "architecture" / "why.kr.md"
     exec_plan_path = ROOT / "docs" / "exec-plans" / "active" / f"{effective_task_id}.kr.md"
@@ -266,6 +290,28 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 - 이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다. 현재 기본값은 `gpt-5.5`다.
 - 필요한 경우 생성 이미지를 실제 UI 자산으로 활용하고, 브라우저 리뷰에서 초안과 구현 결과를 대조한다.
 
+## UI 작업 유형 규칙
+
+- 현재 task의 ui_work_type: {flatten_value(task_pack.get("ui_work_type", "UNKNOWN"))}
+- design_phase_required: {flatten_value(task_pack.get("design_phase_required", "UNKNOWN"))}
+- layout_exploration_required: {flatten_value(task_pack.get("layout_exploration_required", "UNKNOWN"))}
+- visual_concepts_required: {flatten_value(task_pack.get("visual_concepts_required", "UNKNOWN"))}
+- browser_fidelity_review_required: {flatten_value(task_pack.get("browser_fidelity_review_required", "UNKNOWN"))}
+- `ui-foundation`, `ui-new-screen`: intent brief, layout exploration, visual concepts, concept image 계획이 구현 전에 필요하다.
+- `ui-surface-refresh`: 최소 1개의 비교 방향과 선택한 thesis가 필요하다.
+- `ui-narrow-edit`: 큰 탐색보다 유지 범위와 금지 범위 고정이 우선이다.
+
+## UI 의사결정 앵커
+
+- primary screen: {flatten_value(task_pack.get("primary_screen", "UNKNOWN"))}
+- chosen layout thesis: {flatten_value(task_pack.get("layout_thesis", "UNKNOWN"))}
+- chosen visual thesis: {flatten_value(task_pack.get("visual_thesis", "UNKNOWN"))}
+- rejected alternatives:
+{summarize_sections(layout_exploration_path, ["방향 A", "방향 B", "선택 방향"], "layout exploration 문서를 보강한다.")}
+{summarize_sections(visual_concepts_path, ["비주얼 컨셉 A", "비주얼 컨셉 B", "선택 컨셉"], "visual concepts 문서를 보강한다.")}
+- implementation invariants:
+{summarize_sections(ui_principles_path, ["첫 화면 구성 규칙", "리듬과 여백 규칙", "디테일 폴리시 전환 기준"], "ui-principles 문서를 보강한다.")}
+
 ## UI 수정 운영 기준
 
 - UI 수정 요청은 가능하면 `docs/design/ui-edit-brief.kr.md`에 구조화해 유지할 것, 바꿀 것, 금지할 것을 먼저 고정한다.
@@ -282,11 +328,15 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 ### design
 
 {summarize_sections(art_direction_path, ["디자인 목표", "참고 레퍼런스", "피해야 할 패턴", "컬러 토큰", "타이포그래피 정책", "비주얼 초안 생성 절차"], "art-direction 문서를 보강한다.")}
+{summarize_sections(ui_intent_brief_path, ["목적", "기본 작업 분류"], "ui-intent-brief 문서를 보강한다.")}
+{summarize_sections(layout_exploration_path, ["공통 입력", "방향 A", "방향 B", "레이아웃 테제", "generic 회피 선언"], "layout-exploration 문서를 보강한다.")}
+{summarize_sections(visual_concepts_path, ["비주얼 컨셉 A", "비주얼 컨셉 B", "비주얼 테제", "컨셉 이미지 계획", "구현 번역 노트"], "visual-concepts 문서를 보강한다.")}
 {summarize_sections(ui_principles_path, ["레이아웃 원칙", "컴포넌트 규칙", "모션 원칙", "반응형 규칙", "수정 작업 규율", "디자인 구현 절차"], "ui-principles 문서를 보강한다.")}
 {summarize_sections(ui_edit_brief_path, ["목적", "사용 방법", "브리프 템플릿"], "ui-edit-brief 문서를 보강한다.")}
 
 ### prompting
 
+{summarize_sections(ui_foundation_prompt_template_path, ["목적", "사용 방법", "프롬프트 템플릿"], "ui-foundation-prompt-template 문서를 보강한다.")}
 {summarize_sections(ui_edit_prompt_template_path, ["목적", "사용 방법", "프롬프트 템플릿"], "ui-edit-prompt-template 문서를 보강한다.")}
 
 ### architecture
@@ -326,6 +376,9 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 - 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
 - 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
 - UI 수정 요청에서는 무엇을 바꾸지 말아야 하는지부터 선언하고, 한 화면, 한 의도, 한 검증 루프로 잘게 나눈다.
+- serious UI 작업에서는 코드보다 먼저 intent brief, layout exploration, visual concepts, concept images를 정리한다.
+- first pass에서 chosen thesis가 충분히 강해야 이후 반복이 detail polish로 수렴한다.
+- same-category reference와 cross-category reference를 모두 확인하고 generic fallback을 명시적으로 거부한다.
 - UI 구현 전 Codex가 이미지 기반 비주얼 초안을 만들고, 기본 폰트는 국문 Pretendard와 영문 Inter를 사용한다.
 - deck 내부 문서와 충돌하는 오래된 기억이나 일반론보다 현재 repo 문서를 우선한다.
 """
@@ -438,12 +491,48 @@ def validate_service_yaml() -> None:
             raise ValidationError(f"service.yaml branding.{field} must be a mapping when provided")
 
 
+def validate_ui_task_pack_fields(payload: dict[str, Any]) -> None:
+    ui_work_type = payload.get("ui_work_type")
+    if ui_work_type not in UI_WORK_TYPES:
+        raise ValidationError(
+            "task-pack.json ui_work_type must be one of: "
+            + ", ".join(sorted(UI_WORK_TYPES))
+        )
+
+    for field in [
+        "design_phase_required",
+        "layout_exploration_required",
+        "visual_concepts_required",
+        "browser_fidelity_review_required",
+    ]:
+        if not isinstance(payload.get(field), bool):
+            raise ValidationError(f"task-pack.json {field} must be a boolean")
+
+    if ui_work_type == "non-ui":
+        return
+
+    for field in ["primary_screen", "layout_thesis", "visual_thesis"]:
+        value = payload.get(field)
+        if not isinstance(value, str) or not value.strip():
+            raise ValidationError(f"task-pack.json {field} must be a non-empty string for UI tasks")
+
+    if ui_work_type in SERIOUS_UI_WORK_TYPES and not payload.get("design_phase_required"):
+        raise ValidationError("task-pack.json serious UI work must set design_phase_required=true")
+    if ui_work_type in SERIOUS_UI_WORK_TYPES and not payload.get("layout_exploration_required"):
+        raise ValidationError("task-pack.json serious UI work must set layout_exploration_required=true")
+    if ui_work_type in SERIOUS_UI_WORK_TYPES and not payload.get("visual_concepts_required"):
+        raise ValidationError("task-pack.json serious UI work must set visual_concepts_required=true")
+
+
 def validate_task_pack(task_id: str) -> None:
     path = ROOT / "task-pack.json"
     require_file(path)
     payload = load_json(path)
     if payload.get("task_id") != task_id:
         raise ValidationError(f"task-pack.json task_id mismatch: expected {task_id}")
+    if not isinstance(payload, dict):
+        raise ValidationError("task-pack.json must be a JSON object")
+    validate_ui_task_pack_fields(payload)
     must_read = payload.get("must_read")
     docs_required = payload.get("docs_required")
     if not isinstance(must_read, list):
@@ -456,12 +545,62 @@ def validate_task_pack(task_id: str) -> None:
         if path_str not in docs_required:
             raise ValidationError(f"task-pack.json docs_required missing required doc: {path_str}")
 
+    ui_work_type = payload.get("ui_work_type")
+    extra_docs: list[str] = []
+    if ui_work_type in SERIOUS_UI_WORK_TYPES:
+        extra_docs = SERIOUS_UI_DOCS
+    elif ui_work_type == "ui-surface-refresh":
+        extra_docs = [
+            "docs/design/ui-intent-brief.kr.md",
+            "docs/design/layout-exploration.kr.md",
+        ]
+    elif ui_work_type == "ui-narrow-edit":
+        extra_docs = NARROW_UI_DOCS
+
+    for path_str in extra_docs:
+        if path_str not in must_read:
+            raise ValidationError(f"task-pack.json must_read missing required UI doc: {path_str}")
+        if path_str not in docs_required:
+            raise ValidationError(f"task-pack.json docs_required missing required UI doc: {path_str}")
+
 
 def validate_active_exec_plan(task_id: str) -> None:
     rules = manifest()["task_bound_documents"]
     path = ROOT / rules["active_exec_plan_path"].format(task_id=task_id)
     require_file(path)
     require_sections(path, rules["active_exec_plan_sections"])
+
+
+def validate_ui_design_phase(payload: dict[str, Any]) -> None:
+    ui_work_type = payload.get("ui_work_type")
+    if ui_work_type == "non-ui":
+        return
+
+    if payload.get("design_phase_required"):
+        for relative in [
+            "docs/design/ui-intent-brief.kr.md",
+            "docs/design/layout-exploration.kr.md",
+            "docs/design/visual-concepts.kr.md",
+        ]:
+            require_file(ROOT / relative)
+
+    if payload.get("layout_exploration_required"):
+        layout_path = ROOT / "docs" / "design" / "layout-exploration.kr.md"
+        require_sections(
+            layout_path,
+            ["방향 A", "방향 B", "선택 방향", "레이아웃 테제", "generic 회피 선언"],
+        )
+
+    if payload.get("visual_concepts_required"):
+        concepts_path = ROOT / "docs" / "design" / "visual-concepts.kr.md"
+        require_sections(
+            concepts_path,
+            ["비주얼 컨셉 A", "비주얼 컨셉 B", "선택 컨셉", "비주얼 테제", "컨셉 이미지 계획", "구현 번역 노트"],
+        )
+
+    if ui_work_type == "ui-surface-refresh":
+        layout_path = ROOT / "docs" / "design" / "layout-exploration.kr.md"
+        require_sections(layout_path, ["방향 A", "선택 방향", "레이아웃 테제"])
 
 
 def validate_run_report(task_id: str) -> None:
@@ -474,6 +613,46 @@ def validate_run_report(task_id: str) -> None:
         raise ValidationError(f"{path.relative_to(ROOT)} missing fields: {', '.join(missing)}")
     if payload["task_id"] != task_id:
         raise ValidationError(f"{path.relative_to(ROOT)} task_id mismatch: expected {task_id}")
+
+
+def validate_browser_fidelity_evidence(task_id: str, payload: dict[str, Any]) -> None:
+    if not payload.get("browser_fidelity_review_required"):
+        return
+
+    report_path = ROOT / "artifacts" / "run-reports" / f"{task_id}.json"
+    report = load_json(report_path)
+    evidence_paths = report.get("evidence_paths")
+    if not isinstance(evidence_paths, list):
+        raise ValidationError(f"{report_path.relative_to(ROOT)} evidence_paths must be a list")
+
+    fidelity_doc = ROOT / "artifacts" / "evidence" / task_id / "ui-fidelity-review.kr.md"
+    require_file(fidelity_doc)
+    require_sections(
+        fidelity_doc,
+        [
+            "작업 분류",
+            "concept image 경로",
+            "chosen direction 메모",
+            "데스크톱 첫 화면",
+            "모바일 첫 화면",
+            "구현 대비 concept 차이",
+            "테제 유지 판정",
+            "사용성 회귀 점검",
+            "레이아웃 안정성 판정",
+        ],
+    )
+
+    required_paths = [
+        f"artifacts/evidence/{task_id}/ui-fidelity-review.kr.md",
+        f"artifacts/evidence/{task_id}/desktop-first-view",
+        f"artifacts/evidence/{task_id}/mobile-first-view",
+    ]
+    normalized = [str(entry) for entry in evidence_paths]
+    for token in required_paths:
+        if not any(token in entry for entry in normalized):
+            raise ValidationError(
+                f"{report_path.relative_to(ROOT)} evidence_paths missing required UI evidence token: {token}"
+            )
 
 
 def should_require_marker(changes: list[str], prefixes: list[str]) -> bool:
@@ -506,11 +685,13 @@ def run_pre_task(task_id: str) -> None:
     validate_required_docs()
     validate_service_yaml()
     validate_task_pack(task_id)
+    validate_ui_design_phase(task_pack_payload())
     validate_active_exec_plan(task_id)
 
 
 def run_pre_complete(task_id: str, mode: str) -> None:
     run_pre_task(task_id)
+    validate_browser_fidelity_evidence(task_id, task_pack_payload())
     validate_task_markers(task_id, mode)
 
 

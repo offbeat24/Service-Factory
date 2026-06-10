@@ -10,18 +10,32 @@
     "문서 없는 구현은 완료로 보지 않는다.",
     "AGENTS.md는 짧게 유지한다."
   ],
+  "ui_work_type": "ui-foundation",
+  "design_phase_required": true,
+  "layout_exploration_required": true,
+  "visual_concepts_required": true,
+  "browser_fidelity_review_required": false,
+  "primary_screen": "home landing page with positioning and proof",
+  "layout_thesis": "첫 화면은 하나의 집중 행동을 소유하고, 보조 utility는 신뢰 형성 뒤에 열리는 editorial landing 구조로 시작한다.",
+  "visual_thesis": "Warm contrast editorial productivity 톤을 유지하되 generic SaaS gradient와 noisy card grid를 피한다.",
   "must_read": [
     "AGENTS.md",
     "docs/product/product-spec.kr.md",
     "docs/design/art-direction.kr.md",
+    "docs/design/ui-intent-brief.kr.md",
+    "docs/design/layout-exploration.kr.md",
+    "docs/design/visual-concepts.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
     "docs/prompting/prompt-context.kr.md",
+    "docs/prompting/ui-foundation-prompt-template.kr.md",
     "docs/architecture/why.kr.md"
   ],
   "acceptance_criteria": [
     "active exec plan이 최신 상태다.",
     "art direction과 UI principles가 첫 화면의 톤과 구조를 설명한다.",
+    "layout thesis와 visual thesis가 명시되어 있다.",
+    "두 개의 구조 방향과 두 개의 비주얼 컨셉 비교가 문서화되어 있다.",
     "browser review checklist가 디자인과 기능 점검 순서를 설명한다.",
     "핵심 플로우 첫 구현 범위가 분명하다."
   ],
@@ -32,9 +46,13 @@
   "docs_required": [
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md",
     "docs/design/art-direction.kr.md",
+    "docs/design/ui-intent-brief.kr.md",
+    "docs/design/layout-exploration.kr.md",
+    "docs/design/visual-concepts.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
     "docs/prompting/prompt-context.kr.md",
+    "docs/prompting/ui-foundation-prompt-template.kr.md",
     "docs/build-journal.kr.md",
     "docs/architecture/why.kr.md",
     "docs/retrospectives/harness-feedback.kr.md"

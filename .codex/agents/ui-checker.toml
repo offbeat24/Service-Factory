@@ -5,6 +5,6 @@ model_reasoning_effort = "medium"
 sandbox_mode = "read-only"
 developer_instructions = """
 Check UI evidence artifacts, screenshots, and flow outputs.
-Focus on broken flows, visible regressions, missing artifacts, and obvious console/network issues.
-Do not propose speculative redesigns.
+Focus on broken flows, visible regressions, missing artifacts, obvious console/network issues, concept drift, genericization during implementation, and whether the chosen thesis is still legible in browser output.
+Do not propose speculative redesigns; validate fidelity to the selected direction on desktop and mobile.
 """

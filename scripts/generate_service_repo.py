@@ -171,6 +171,15 @@ def render_mapping_or_default(mapping: Any, default: str) -> str:
 def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
     today = date.today().isoformat()
     branding = spec["branding"]
+    bootstrap_primary_screen = str(spec["pages"][0])
+    bootstrap_layout_thesis = (
+        "첫 화면에서 하나의 핵심 행동을 소유하게 하고, "
+        "보조 utility는 신뢰 형성 뒤에 펼치는 editorial 구조로 시작한다."
+    )
+    bootstrap_visual_thesis = (
+        f"{branding.get('visual_direction', 'editorial')} 방향을 유지하면서 "
+        "generic SaaS gradient와 과밀한 카드 상단 구성을 피한다."
+    )
     return {
         "SERVICE_ID": str(spec["id"]),
         "SERVICE_NAME": str(spec["name"]),
@@ -233,6 +242,9 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
         "BOOTSTRAP_TASK_ID": BOOTSTRAP_TASK_ID,
         "INIT_TASK_ID": INIT_TASK_ID,
         "SOURCE_SPEC_PATH": str(source_spec),
+        "BOOTSTRAP_PRIMARY_SCREEN": bootstrap_primary_screen,
+        "BOOTSTRAP_LAYOUT_THESIS": bootstrap_layout_thesis,
+        "BOOTSTRAP_VISUAL_THESIS": bootstrap_visual_thesis,
         "SERVICE_SPEC_JSON": json.dumps(spec, ensure_ascii=False, indent=2),
         "INITIAL_TASK_PACK_JSON": json.dumps(
             {
@@ -249,19 +261,33 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                     "큰 프롬프트 대신 현재 작업에 필요한 문서만 읽는다.",
                     "문서 없는 구현은 완료로 간주하지 않는다.",
                 ],
+                "ui_work_type": "ui-foundation",
+                "design_phase_required": True,
+                "layout_exploration_required": True,
+                "visual_concepts_required": True,
+                "browser_fidelity_review_required": False,
+                "primary_screen": bootstrap_primary_screen,
+                "layout_thesis": bootstrap_layout_thesis,
+                "visual_thesis": bootstrap_visual_thesis,
                 "must_read": [
                     "AGENTS.md",
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
                     "docs/product/product-spec.kr.md",
                     "docs/prompting/prompt-context.kr.md",
                     "docs/design/art-direction.kr.md",
+                    "docs/design/ui-intent-brief.kr.md",
+                    "docs/design/layout-exploration.kr.md",
+                    "docs/design/visual-concepts.kr.md",
                     "docs/design/ui-principles.kr.md",
                     "docs/design/browser-review.kr.md",
+                    "docs/prompting/ui-foundation-prompt-template.kr.md",
                     "docs/architecture/why.kr.md",
                 ],
                 "acceptance_criteria": [
                     "active exec plan이 최신 상태다.",
                     "디자인 기준 문서가 첫 화면의 톤, 계층, 금지 패턴을 설명한다.",
+                    "layout thesis와 visual thesis가 명시되어 있다.",
+                    "두 개의 구조 방향과 두 개의 비주얼 컨셉 비교가 문서화되어 있다.",
                     "browser review checklist가 디자인과 기능 점검 순서를 설명한다.",
                     "핵심 플로우 구현 범위와 검증 방법이 분명하다.",
                     "evidence 저장 경로가 준비되어 있다.",
@@ -274,8 +300,12 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
                     "docs/prompting/prompt-context.kr.md",
                     "docs/design/art-direction.kr.md",
+                    "docs/design/ui-intent-brief.kr.md",
+                    "docs/design/layout-exploration.kr.md",
+                    "docs/design/visual-concepts.kr.md",
                     "docs/design/ui-principles.kr.md",
                     "docs/design/browser-review.kr.md",
+                    "docs/prompting/ui-foundation-prompt-template.kr.md",
                     "docs/build-journal.kr.md",
                     "docs/architecture/why.kr.md",
                     "docs/retrospectives/harness-feedback.kr.md",

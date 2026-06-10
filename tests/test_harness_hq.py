@@ -60,9 +60,13 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / "docs" / "product" / "product-spec.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "art-direction.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "browser-review.kr.md").exists())
+            self.assertTrue((repo / "docs" / "design" / "ui-intent-brief.kr.md").exists())
+            self.assertTrue((repo / "docs" / "design" / "layout-exploration.kr.md").exists())
+            self.assertTrue((repo / "docs" / "design" / "visual-concepts.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "ui-edit-brief.kr.md").exists())
             self.assertTrue((repo / "docs" / "design" / "ui-principles.kr.md").exists())
             self.assertTrue((repo / "docs" / "prompting" / "prompt-context.kr.md").exists())
+            self.assertTrue((repo / "docs" / "prompting" / "ui-foundation-prompt-template.kr.md").exists())
             self.assertTrue((repo / "docs" / "prompting" / "ui-edit-prompt-template.kr.md").exists())
             self.assertTrue((repo / "scripts" / "harness.py").exists())
             config_text = (repo / ".codex" / "config.toml").read_text(encoding="utf-8")
@@ -98,6 +102,7 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("branch names do not include task ids", agents_text)
             self.assertIn("Use web or official external tools when the fact could have changed recently.", agents_text)
             self.assertIn("For image generation drafts, image interpretation, and screenshot-based visual judgment, use the latest frontier model.", agents_text)
+            self.assertIn("Serious UI work does not begin with code.", agents_text)
             prompt_context_text = (repo / "docs" / "prompting" / "prompt-context.kr.md").read_text(encoding="utf-8")
             self.assertIn("서비스 이름: Focus Sprint", prompt_context_text)
             self.assertIn("톤: sharp and disciplined", prompt_context_text)
@@ -105,6 +110,11 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("이 문서는 빠른 맥락 복구용 요약이다.", prompt_context_text)
             self.assertIn("프롬프트/구조 감사는", prompt_context_text)
             self.assertIn("이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다.", prompt_context_text)
+            self.assertIn("## UI 작업 유형 규칙", prompt_context_text)
+            self.assertIn("chosen layout thesis", prompt_context_text)
+            foundation_prompt = (repo / "docs" / "prompting" / "ui-foundation-prompt-template.kr.md").read_text(encoding="utf-8")
+            self.assertIn("구조 방향 비교", foundation_prompt)
+            self.assertIn("선택한 layout thesis", foundation_prompt)
 
     def test_setup_hq_creates_requested_deck_root(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-setup-") as tmpdir:
@@ -172,6 +182,102 @@ class HarnessHQTests(unittest.TestCase):
 
             run([sys.executable, "scripts/harness.py", "pre-complete"], repo)
 
+    def test_generated_repo_pre_complete_requires_browser_fidelity_when_flagged(self) -> None:
+        with tempfile.TemporaryDirectory(prefix="harness-fidelity-") as tmpdir:
+            output_root = Path(tmpdir) / "out"
+            run(
+                [
+                    sys.executable,
+                    str(GENERATOR),
+                    "--spec",
+                    str(EXAMPLE_SPEC),
+                    "--output-root",
+                    str(output_root),
+                ],
+                ROOT,
+            )
+            repo = output_root / "focus-sprint"
+            self._init_git_repo(repo)
+
+            payload = json.loads((repo / "task-pack.json").read_text(encoding="utf-8"))
+            payload["browser_fidelity_review_required"] = True
+            (repo / "task-pack.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            report_path = repo / "artifacts" / "run-reports" / "BOOTSTRAP-001.json"
+            report_path.write_text(
+                json.dumps(
+                    {
+                        "task_id": "BOOTSTRAP-001",
+                        "provider": "openai",
+                        "lead_model": "gpt-5.4",
+                        "worker_models": ["gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2"],
+                        "changed_scope": ["docs/design/visual-concepts.kr.md"],
+                        "verification_results": [{"name": "browser-review", "status": "passed"}],
+                        "evidence_paths": [],
+                        "failures": [],
+                        "handoff_notes": ["Browser fidelity review is pending."],
+                        "next_actions": ["Attach fidelity evidence."]
+                    },
+                    ensure_ascii=False,
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+
+            failed = run([sys.executable, "scripts/harness.py", "pre-complete"], repo, check=False)
+            self.assertNotEqual(failed.returncode, 0)
+            self.assertIn("required file is missing: artifacts/evidence/BOOTSTRAP-001/ui-fidelity-review.kr.md", failed.stderr)
+
+            evidence_dir = repo / "artifacts" / "evidence" / "BOOTSTRAP-001"
+            evidence_dir.mkdir(parents=True, exist_ok=True)
+            fidelity_doc = evidence_dir / "ui-fidelity-review.kr.md"
+            fidelity_doc.write_text(
+                "\n".join(
+                    [
+                        "# UI Fidelity Review",
+                        "",
+                        "## 작업 분류",
+                        "- ui-foundation",
+                        "",
+                        "## concept image 경로",
+                        "- artifacts/evidence/BOOTSTRAP-001/concept-desktop-a.png",
+                        "",
+                        "## chosen direction 메모",
+                        "- 방향 A를 선택했다.",
+                        "",
+                        "## 데스크톱 첫 화면",
+                        "- artifacts/evidence/BOOTSTRAP-001/desktop-first-view.png",
+                        "",
+                        "## 모바일 첫 화면",
+                        "- artifacts/evidence/BOOTSTRAP-001/mobile-first-view.png",
+                        "",
+                        "## 구현 대비 concept 차이",
+                        "- spacing만 줄이고 구조는 유지했다.",
+                        "",
+                        "## 테제 유지 판정",
+                        "- layout thesis와 visual thesis가 유지됐다.",
+                        "",
+                        "## 사용성 회귀 점검",
+                        "- CTA 발견성과 모바일 오버플로 문제는 없다.",
+                        "",
+                        "## 레이아웃 안정성 판정",
+                        "- layout-stable",
+                        "",
+                    ]
+                ),
+                encoding="utf-8",
+            )
+
+            report = json.loads(report_path.read_text(encoding="utf-8"))
+            report["evidence_paths"] = [
+                "artifacts/evidence/BOOTSTRAP-001/ui-fidelity-review.kr.md",
+                "artifacts/evidence/BOOTSTRAP-001/desktop-first-view.png",
+                "artifacts/evidence/BOOTSTRAP-001/mobile-first-view.png",
+            ]
+            report_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            run([sys.executable, "scripts/harness.py", "pre-complete"], repo)
+
     def test_generated_repo_syncs_prompt_context_from_service_yaml(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-prompt-context-") as tmpdir:
             output_root = Path(tmpdir) / "out"
@@ -193,6 +299,7 @@ class HarnessHQTests(unittest.TestCase):
             run([sys.executable, "scripts/harness.py", "sync-prompt-context", "--task-id", "BOOTSTRAP-001"], repo)
             prompt_context_text = (repo / "docs" / "prompting" / "prompt-context.kr.md").read_text(encoding="utf-8")
             self.assertIn("톤: precise and calm", prompt_context_text)
+            self.assertIn("## UI 의사결정 앵커", prompt_context_text)
 
     def test_generated_repo_rejects_incomplete_branding(self) -> None:
         with tempfile.TemporaryDirectory(prefix="harness-branding-") as tmpdir:

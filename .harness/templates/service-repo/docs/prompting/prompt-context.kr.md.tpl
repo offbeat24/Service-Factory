@@ -45,6 +45,27 @@
 - 이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다. 현재 기본값은 `gpt-5.5`다.
 - 필요한 경우 생성 이미지를 실제 UI 자산으로 활용하고, 브라우저 리뷰에서 초안과 구현 결과를 대조한다.
 
+## UI 작업 유형 규칙
+
+- 현재 task의 ui_work_type: `ui-foundation`
+- design_phase_required: `true`
+- layout_exploration_required: `true`
+- visual_concepts_required: `true`
+- browser_fidelity_review_required: `false`
+- `ui-foundation`, `ui-new-screen`: intent brief, layout exploration, visual concepts, concept image 계획이 구현 전에 필요하다.
+- `ui-surface-refresh`: 최소 1개의 비교 방향과 선택한 thesis가 필요하다.
+- `ui-narrow-edit`: 큰 탐색보다 유지 범위와 금지 범위 고정이 우선이다.
+- serious UI 작업에서는 구현이 디자인 탐색의 시작점이 되어서는 안 된다.
+
+## UI 의사결정 앵커
+
+- primary screen: {{BOOTSTRAP_PRIMARY_SCREEN}}
+- chosen layout thesis: {{BOOTSTRAP_LAYOUT_THESIS}}
+- chosen visual thesis: {{BOOTSTRAP_VISUAL_THESIS}}
+- rejected alternatives: `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md`
+- references와 anti-references: art direction, layout exploration, visual concepts 문서를 함께 본다.
+- implementation invariants: primary action, hierarchy, spacing rhythm, surface treatment, generic 회피 규칙
+
 ## UI 수정 운영 기준
 
 - UI 수정 요청은 가능하면 `docs/design/ui-edit-brief.kr.md`에 구조화해 유지할 것, 바꿀 것, 금지할 것을 먼저 고정한다.
@@ -61,10 +82,12 @@
 ### design
 
 - `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 읽고 UI 판단에 반영한다.
+- `ui-foundation` 또는 `ui-new-screen` 작업이면 `docs/design/ui-intent-brief.kr.md`, `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md`도 함께 읽는다.
 - UI 수정 작업이면 `docs/design/ui-edit-brief.kr.md`도 함께 읽고 변경 범위를 벗어나지 않게 해석한다.
 
 ### prompting
 
+- serious UI 작업이면 `docs/prompting/ui-foundation-prompt-template.kr.md`를 사용해 두 방향 비교, thesis, anti-generic 제약을 먼저 고정한다.
 - UI 수정 작업이면 `docs/prompting/ui-edit-prompt-template.kr.md`를 사용해 유지 범위, 변경 범위, 금지 범위, 검증 포인트를 먼저 고정한다.
 
 ### architecture
@@ -102,5 +125,8 @@
 
 - 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
 - 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
+- serious UI 작업에서는 code보다 먼저 intent brief, layout exploration, visual concepts, concept images를 정리한다.
+- 첫 시안이 마음에 들어야 이후 반복이 detail polish로 수렴한다는 것을 기본 목표로 둔다.
+- same-category reference와 cross-category reference를 모두 확인하고, generic fallback을 명시적으로 거부한다.
 - UI 수정 요청에서는 무엇을 바꾸지 말아야 하는지부터 선언하고, 한 화면, 한 의도, 한 검증 루프로 잘게 나눈다.
 - deck 내부 문서와 충돌하는 오래된 기억이나 일반론보다 현재 repo 문서를 우선한다.

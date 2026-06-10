@@ -4,6 +4,7 @@
 
 - 이 템플릿은 UI 수정 요청을 넓은 재해석이 아니라 좁은 변경으로 유도하기 위한 작업용 프롬프트 틀이다.
 - 프롬프트만으로 통제하지 않고, `docs/design/ui-edit-brief.kr.md`, `docs/design/browser-review.kr.md`, `docs/prompting/prompt-context.kr.md`와 함께 사용한다.
+- 새 화면, 랜딩, 첫 대시보드, 구조 재설계 작업에는 이 템플릿 대신 `docs/prompting/ui-foundation-prompt-template.kr.md`를 사용한다.
 
 ## 사용 방법
 
@@ -33,6 +34,9 @@
 
 이번 수정에서 금지할 것:
 - [전면 재구성, 새 섹션 추가, 정보 구조 변경 등]
+
+이번 수정에서 유지해야 할 layout thesis 또는 visual thesis:
+- [현재 화면이 이미 가진 구조적 강점]
 
 작업 단위 제한:
 - 한 화면, 한 의도, 한 검증 루프로만 진행한다.

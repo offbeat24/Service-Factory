@@ -10,6 +10,7 @@
 - 한 브리프는 한 화면 또는 한 플로우를 기준으로 작성한다.
 - 요청이 커지면 브리프를 나누고, 각 브리프마다 별도 evidence를 남긴다.
 - 이 문서는 source-of-truth가 아니라 현재 수정 의도를 고정하는 작업 문서다. 제품 기준은 `service.yaml`과 설계 문서를 우선한다.
+- `ui-foundation`이나 `ui-new-screen` 같은 큰 작업에는 이 문서 대신 `ui-intent-brief`, `layout-exploration`, `visual-concepts`를 먼저 사용한다.
 
 ## 브리프 템플릿
 

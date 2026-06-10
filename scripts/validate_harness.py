@@ -47,6 +47,12 @@ REQUIRED_TASK_PACK_READS = [
     "docs/design/browser-review.kr.md",
     "docs/prompting/prompt-context.kr.md",
 ]
+SERIOUS_UI_DOCS = [
+    "docs/design/ui-intent-brief.kr.md",
+    "docs/design/layout-exploration.kr.md",
+    "docs/design/visual-concepts.kr.md",
+    "docs/prompting/ui-foundation-prompt-template.kr.md",
+]
 REQUIRED_TEMPLATES = [
     "AGENTS.md.tpl",
     "README.md.tpl",
@@ -70,9 +76,13 @@ REQUIRED_TEMPLATES = [
     "docs/product/product-spec.kr.md.tpl",
     "docs/design/art-direction.kr.md.tpl",
     "docs/design/browser-review.kr.md.tpl",
+    "docs/design/ui-intent-brief.kr.md.tpl",
+    "docs/design/layout-exploration.kr.md.tpl",
+    "docs/design/visual-concepts.kr.md.tpl",
     "docs/design/ui-edit-brief.kr.md.tpl",
     "docs/design/ui-principles.kr.md.tpl",
     "docs/prompting/prompt-context.kr.md.tpl",
+    "docs/prompting/ui-foundation-prompt-template.kr.md.tpl",
     "docs/prompting/ui-edit-prompt-template.kr.md.tpl",
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md.tpl",
     "docs/exec-plans/completed/INIT-000.kr.md.tpl",
@@ -108,6 +118,11 @@ REQUIRED_TASK_PACK_FIELDS = [
     "goal",
     "scope",
     "constraints",
+    "ui_work_type",
+    "design_phase_required",
+    "layout_exploration_required",
+    "visual_concepts_required",
+    "browser_fidelity_review_required",
     "must_read",
     "acceptance_criteria",
     "verification_commands",
@@ -230,9 +245,23 @@ def validate_task_pack(path: Path) -> None:
     ensure(not missing, f"example task-pack.json missing fields: {', '.join(missing)}")
     ensure(isinstance(payload["must_read"], list), "example task-pack.json must_read must be a list")
     ensure(isinstance(payload["docs_required"], list), "example task-pack.json docs_required must be a list")
+    ensure(payload["ui_work_type"] in {"non-ui", "ui-narrow-edit", "ui-surface-refresh", "ui-new-screen", "ui-foundation"}, "example task-pack.json ui_work_type is invalid")
+    for field in [
+        "design_phase_required",
+        "layout_exploration_required",
+        "visual_concepts_required",
+        "browser_fidelity_review_required",
+    ]:
+        ensure(isinstance(payload[field], bool), f"example task-pack.json {field} must be boolean")
     for path_str in REQUIRED_TASK_PACK_READS:
         ensure(path_str in payload["must_read"], f"example task-pack.json must_read missing {path_str}")
         ensure(path_str in payload["docs_required"], f"example task-pack.json docs_required missing {path_str}")
+    if payload["ui_work_type"] in {"ui-foundation", "ui-new-screen"}:
+        for path_str in SERIOUS_UI_DOCS:
+            ensure(path_str in payload["must_read"], f"example task-pack.json must_read missing {path_str}")
+            ensure(path_str in payload["docs_required"], f"example task-pack.json docs_required missing {path_str}")
+        for field in ["primary_screen", "layout_thesis", "visual_thesis"]:
+            ensure(isinstance(payload.get(field), str) and bool(payload[field].strip()), f"example task-pack.json {field} must be present for serious UI tasks")
 
 
 def validate_run_report(path: Path) -> None:
@@ -484,9 +513,16 @@ def validate_dry_run_generation() -> None:
         ensure((generated / "docs-manifest.json").exists(), "generated docs-manifest.json missing")
         ensure((generated / "docs" / "design" / "art-direction.kr.md").exists(), "generated art-direction doc missing")
         ensure((generated / "docs" / "design" / "browser-review.kr.md").exists(), "generated browser-review doc missing")
+        ensure((generated / "docs" / "design" / "ui-intent-brief.kr.md").exists(), "generated ui-intent-brief doc missing")
+        ensure((generated / "docs" / "design" / "layout-exploration.kr.md").exists(), "generated layout-exploration doc missing")
+        ensure((generated / "docs" / "design" / "visual-concepts.kr.md").exists(), "generated visual-concepts doc missing")
         ensure((generated / "docs" / "design" / "ui-edit-brief.kr.md").exists(), "generated ui-edit-brief doc missing")
         ensure((generated / "docs" / "design" / "ui-principles.kr.md").exists(), "generated ui-principles doc missing")
         ensure((generated / "docs" / "prompting" / "prompt-context.kr.md").exists(), "generated prompt-context doc missing")
+        ensure(
+            (generated / "docs" / "prompting" / "ui-foundation-prompt-template.kr.md").exists(),
+            "generated ui-foundation-prompt-template doc missing",
+        )
         ensure(
             (generated / "docs" / "prompting" / "ui-edit-prompt-template.kr.md").exists(),
             "generated ui-edit-prompt-template doc missing",

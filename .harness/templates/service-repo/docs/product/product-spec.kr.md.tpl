@@ -29,6 +29,7 @@
 {{BRANDING_BULLETS}}
 
 디자인 세부 기준은 `docs/design/art-direction.kr.md`와 `docs/design/ui-principles.kr.md`를 따른다.
+첫 serious UI 작업은 `docs/design/ui-intent-brief.kr.md`, `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md`를 먼저 채운 뒤 구현으로 넘어간다.
 
 ## 수익화 가정
 

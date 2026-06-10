@@ -41,6 +41,17 @@ Harness HQ에서 말하는 프롬프트는 한 번 던지는 지시문이 아니
 - 부분 UI 수정에서는 "개선" 명분의 전면 재해석보다 요청 범위를 좁게 고정하는 쪽을 기본값으로 둔다.
 - 이미지 작업은 생성 프롬프트, 사용한 레퍼런스, 비교 근거, 최종 선택 이유까지 남기는 편을 기본값으로 둔다.
 
+## UI 첫 시안 정책
+
+- 중요한 UI 작업은 구현으로 시작하지 않는다.
+- `ui-foundation`과 `ui-new-screen` 작업은 `brief -> structural exploration -> visual concept exploration -> choose thesis -> implement -> browser verify -> detail polish` 순서를 기본값으로 둔다.
+- 첫 serious UI 시안의 품질은 나중에 구조를 뜯지 않아도 될 정도로 높아야 한다.
+- serious UI 작업에서는 최소 2개의 구조 방향과 2개의 비주얼 컨셉을 비교하고, 하나를 선택한 이유와 버린 이유를 남긴다.
+- same-category reference와 cross-category reference를 모두 확인하고, anti-reference도 함께 남긴다.
+- first pass의 목표는 “대충 돌아가는 첫 화면”이 아니라 “이후 반복이 detail polish로 수렴하는 첫 화면”이다.
+- 구현 단계는 디자인 방향을 다시 발명하는 단계가 아니라, chosen thesis를 충실히 번역하는 단계다.
+- browser review는 뒤늦은 디자인 탐색이 아니라 fidelity와 usability 검증을 담당한다.
+
 ## 검증 정책
 
 - “좋아 보인다”는 완료 기준이 아니다.
