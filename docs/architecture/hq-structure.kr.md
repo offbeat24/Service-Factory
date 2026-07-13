@@ -21,7 +21,9 @@
 ## 디자인 문서 원칙
 
 - 제품 스펙 하나에 디자인 의도를 몰아넣지 않는다.
+- 생성 서비스 레포 루트에는 `DESIGN.md`를 두고, 에이전트가 가장 먼저 읽는 압축된 디자인 명세로 사용한다.
 - 생성 서비스 레포에는 `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 넣는다.
+- 생성 서비스 레포에는 `docs/design/design-reference-selection.kr.md`를 함께 넣고, 서비스 컨셉에 맞춰 `oh-my-design`와 `getdesign.md`에서 DESIGN.md 후보를 먼저 추린 뒤 선택 근거와 적용 축을 기록한다.
 - 생성 서비스 레포에는 first-pass UI 품질을 위해 `docs/design/ui-intent-brief.kr.md`, `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md`도 함께 넣는다.
 - 생성 서비스 레포에는 UI 수정 요청을 구조화하기 위한 `docs/design/ui-edit-brief.kr.md` 기본 문서를 함께 넣는다.
 - 생성 서비스 레포에는 `docs/prompting/prompt-context.kr.md`를 두고, `service.yaml`과 deck 문서에서 자동으로 다시 만든다.
@@ -34,6 +36,7 @@
 - 디자인 품질 판단은 감상평 대신 reference, anti-pattern, screenshot evidence, spacing/type hierarchy 메모로 남긴다.
 - 브라우저에서 실제 화면과 핵심 플로우를 보고 수정하는 루프를 기본 절차로 취급한다.
 - 중요한 UI 작업은 코드 전에 brief, structural exploration, visual concepts, concept images를 먼저 고정하고, 브라우저 리뷰는 fidelity 판정에 사용한다.
+- 초기 디자인 설정과 실질적인 DESIGN.md 변경은 두 제공처 후보 비교를 먼저 거치며, 변경 후에는 `service.yaml`, `DESIGN.md`, art direction, prompt context가 같은 선택 결과를 가리켜야 한다.
 - UI 수정 통제는 긴 프롬프트 한 번보다 문서화된 수정 범위, 금지 패턴, 브라우저 비교 evidence로 다룬다.
 
 ## Codex 설정 원칙

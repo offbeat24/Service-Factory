@@ -100,7 +100,9 @@
       "required": [
         "tone",
         "visual_direction",
-        "keywords"
+        "keywords",
+        "design_reference_candidates",
+        "selected_design_reference"
       ],
       "properties": {
         "tone": {
@@ -123,6 +125,76 @@
           "items": {
             "type": "string"
           }
+        },
+        "design_reference_candidates": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "source",
+              "name",
+              "fit",
+              "use_for"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "oh-my-design",
+                  "getdesign.md"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "use_for": {
+                "type": "string",
+                "minLength": 1
+              },
+              "risk": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "selected_design_reference": {
+          "type": "object",
+          "required": [
+            "primary",
+            "secondary",
+            "rationale"
+          ],
+          "properties": {
+            "primary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "secondary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "layout": {
+              "type": "string"
+            },
+            "visual": {
+              "type": "string"
+            },
+            "voice": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
         },
         "anti_references": {
           "type": "array",

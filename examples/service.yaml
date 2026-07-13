@@ -31,6 +31,24 @@ branding:
     - Linear landing page clarity
     - Stripe docs information hierarchy
     - Notion editorial spacing
+  design_reference_candidates:
+    - source: oh-my-design
+      name: Linear
+      fit: disciplined productivity UI with high clarity and restrained motion
+      use_for: layout density, hierarchy, primary action discipline
+      risk: can become too cold for solo-builder coaching if copied directly
+    - source: getdesign.md
+      name: Stripe
+      fit: trustworthy information architecture for complex product explanation
+      use_for: docs-like proof structure, section sequencing, precise surfaces
+      risk: can overfit to developer-platform polish instead of daily execution warmth
+  selected_design_reference:
+    primary: oh-my-design Linear
+    secondary: getdesign.md Stripe
+    rationale: combine Linear's disciplined execution feel with Stripe's precise trust-building hierarchy for a solo-builder planning product
+    layout: Linear for first-view hierarchy and density
+    visual: Stripe for warm precision and proof-led surfaces
+    voice: keep direct, calm coaching language rather than copying either brand verbatim
   anti_references:
     - generic SaaS gradient hero
     - crowded dashboard cards above the fold

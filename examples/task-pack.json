@@ -20,8 +20,10 @@
   "visual_thesis": "Warm contrast editorial productivity 톤을 유지하되 generic SaaS gradient와 noisy card grid를 피한다.",
   "must_read": [
     "AGENTS.md",
+    "DESIGN.md",
     "docs/product/product-spec.kr.md",
     "docs/design/art-direction.kr.md",
+    "docs/design/design-reference-selection.kr.md",
     "docs/design/ui-intent-brief.kr.md",
     "docs/design/layout-exploration.kr.md",
     "docs/design/visual-concepts.kr.md",
@@ -44,8 +46,10 @@
     "python3 scripts/harness.py ci"
   ],
   "docs_required": [
+    "DESIGN.md",
     "docs/exec-plans/active/BOOTSTRAP-001.kr.md",
     "docs/design/art-direction.kr.md",
+    "docs/design/design-reference-selection.kr.md",
     "docs/design/ui-intent-brief.kr.md",
     "docs/design/layout-exploration.kr.md",
     "docs/design/visual-concepts.kr.md",

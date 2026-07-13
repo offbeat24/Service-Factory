@@ -3,7 +3,7 @@
 ## 목적
 
 - 이 템플릿은 UI 수정 요청을 넓은 재해석이 아니라 좁은 변경으로 유도하기 위한 작업용 프롬프트 틀이다.
-- 프롬프트만으로 통제하지 않고, `docs/design/ui-edit-brief.kr.md`, `docs/design/browser-review.kr.md`, `docs/prompting/prompt-context.kr.md`와 함께 사용한다.
+- 프롬프트만으로 통제하지 않고, `docs/design/design-reference-selection.kr.md`, `docs/design/ui-edit-brief.kr.md`, `docs/design/browser-review.kr.md`, `docs/prompting/prompt-context.kr.md`와 함께 사용한다.
 - 새 화면, 랜딩, 첫 대시보드, 구조 재설계 작업에는 이 템플릿 대신 `docs/prompting/ui-foundation-prompt-template.kr.md`를 사용한다.
 
 ## 사용 방법
@@ -11,6 +11,7 @@
 - 한 번에 한 화면 또는 한 플로우만 대상으로 쓴다.
 - 프롬프트를 보내기 전에 brief와 기준 스크린샷을 먼저 준비한다.
 - "개선"보다 "유지 범위와 변경 범위를 좁게 지키기"를 우선한다.
+- 디자인 방향을 실질적으로 바꾸는 수정이면 먼저 `oh-my-design`와 `getdesign.md` 후보를 다시 비교하고 선택 근거를 갱신한다.
 - 응답 결과는 바로 완료 처리하지 말고 브라우저 비교 evidence로 다시 판단한다.
 
 ## 프롬프트 템플릿
@@ -19,6 +20,7 @@
 다음 문서를 먼저 읽고 그 기준 안에서만 수정한다.
 - docs/prompting/prompt-context.kr.md
 - docs/design/art-direction.kr.md
+- docs/design/design-reference-selection.kr.md
 - docs/design/ui-principles.kr.md
 - docs/design/browser-review.kr.md
 - docs/design/ui-edit-brief.kr.md

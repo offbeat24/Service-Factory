@@ -16,8 +16,10 @@
 
 ## Repo Map
 
+- Authoritative design spec: `DESIGN.md`
 - Product spec: `docs/product/product-spec.kr.md`
 - Art direction: `docs/design/art-direction.kr.md`
+- Design reference selection: `docs/design/design-reference-selection.kr.md`
 - UI intent brief: `docs/design/ui-intent-brief.kr.md`
 - Layout exploration: `docs/design/layout-exploration.kr.md`
 - Visual concepts: `docs/design/visual-concepts.kr.md`
@@ -40,7 +42,7 @@
 3. Keep the main branch name as `main` and initialize with `git init -b main` if needed.
 4. Create or switch to a branch like `feature/init`.
 5. Run `python3 scripts/harness.py pre-task`.
-6. Read the active exec plan, product spec, prompt context, art direction, UI principles, and browser review checklist before editing code.
+6. Read `DESIGN.md`, the active exec plan, product spec, prompt context, art direction, design reference selection, UI principles, and browser review checklist before editing code.
 7. For `ui-new-screen` or `ui-foundation` work, read `docs/design/ui-intent-brief.kr.md`, `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md`, and `docs/prompting/ui-foundation-prompt-template.kr.md` before touching JSX/CSS.
 8. For `ui-narrow-edit` work, read `docs/design/ui-edit-brief.kr.md` and `docs/prompting/ui-edit-prompt-template.kr.md` before editing.
 9. Keep work inside the current task scope.
@@ -57,6 +59,7 @@
 ## UI First Pass Rules
 
 - Serious UI work does not begin with code. For `ui-foundation` and `ui-new-screen`, start with the intent brief, layout exploration, visual concepts, and concept-image plan.
+- Initial UI setup and later material visual changes must first shortlist DESIGN.md references from both `oh-my-design` and `getdesign.md`, then record the selected axes in `docs/design/design-reference-selection.kr.md`.
 - Compare at least 2 materially different directions before choosing one. Do not implement the first safe idea unless the comparison proves it is stronger.
 - Declare a one-sentence layout thesis and visual thesis before implementation, and carry both through prompt context, evidence, and browser review.
 - Record what generic defaults are being rejected before code edits begin.
@@ -88,6 +91,8 @@
 ## Documentation Rules
 
 - `AGENTS.md` stays short; detailed reasoning belongs in `docs/`.
+- `DESIGN.md` is the compact source of truth for UI generation. Update it when the visual system changes materially.
+- When `DESIGN.md` changes materially, update `docs/design/design-reference-selection.kr.md` first or in the same commit so the reference source and selection rationale stay auditable.
 - Do not leave `TODO`, `TBD`, or empty headings in required docs.
 - Code or config changes must map back to the current `task_id`.
 - Because branch names do not include task ids, keep exactly one active exec plan unless a command explicitly passes `--task-id`.

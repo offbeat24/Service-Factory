@@ -7,6 +7,7 @@ Harness HQ에서 말하는 프롬프트는 한 번 던지는 지시문이 아니
 ## 지시 계층
 
 - 루트 지도는 `AGENTS.md`에 둔다.
+- UI 생성의 압축된 시각 규격은 생성 서비스 레포 루트 `DESIGN.md`에 둔다.
 - 상세 운영 기준은 `docs/` 아래 문서에 둔다.
 - 생성 서비스 레포에서는 `service.yaml`과 설계 문서를 요약한 `docs/prompting/prompt-context.kr.md`를 빠른 맥락 복구용으로 쓴다.
 - 반복 설명이 필요한 규칙은 채팅에 흩뿌리지 말고 저장소 파일로 올린다.
@@ -37,6 +38,8 @@ Harness HQ에서 말하는 프롬프트는 한 번 던지는 지시문이 아니
 - 최소 산출물 후보에는 테스트, 문서, 실행 계획, run report, evidence, 리뷰 응답, 운영 스크립트, 평가 기준이 포함된다.
 - 중요한 결정은 채팅에만 남기지 말고 저장소 문서나 구조화된 산출물로 남긴다.
 - UI 작업은 가능하면 reference, anti-pattern, screenshot evidence, spacing/type hierarchy 메모까지 남긴다.
+- 에이전트가 새 UI를 만들 때는 먼저 `DESIGN.md`를 읽고, 세부 근거와 검증 절차는 `docs/design/*.kr.md`에서 보강한다.
+- 프로젝트 컨셉을 처음 디자인에 번역하거나 실질적으로 `DESIGN.md`를 바꿀 때는 `oh-my-design`와 `getdesign.md`에서 각각 후보를 추리고, `docs/design/design-reference-selection.kr.md`에 선택 이유와 축별 적용 범위를 남긴다.
 - UI 수정 작업은 자유형 채팅 요청만으로 끝내지 말고, 가능하면 무엇을 유지할지, 무엇을 바꿀지, 무엇을 금지할지, acceptance criteria가 포함된 구조화 문서로 승격한다.
 - 부분 UI 수정에서는 "개선" 명분의 전면 재해석보다 요청 범위를 좁게 고정하는 쪽을 기본값으로 둔다.
 - 이미지 작업은 생성 프롬프트, 사용한 레퍼런스, 비교 근거, 최종 선택 이유까지 남기는 편을 기본값으로 둔다.
@@ -48,6 +51,7 @@ Harness HQ에서 말하는 프롬프트는 한 번 던지는 지시문이 아니
 - 첫 serious UI 시안의 품질은 나중에 구조를 뜯지 않아도 될 정도로 높아야 한다.
 - serious UI 작업에서는 최소 2개의 구조 방향과 2개의 비주얼 컨셉을 비교하고, 하나를 선택한 이유와 버린 이유를 남긴다.
 - same-category reference와 cross-category reference를 모두 확인하고, anti-reference도 함께 남긴다.
+- 초기 후보는 한 제공처에만 의존하지 않고 `oh-my-design`와 `getdesign.md`를 모두 확인한다. 둘 중 하나를 확인하지 못하면 이유와 대체 근거를 문서에 남긴다.
 - first pass의 목표는 “대충 돌아가는 첫 화면”이 아니라 “이후 반복이 detail polish로 수렴하는 첫 화면”이다.
 - 구현 단계는 디자인 방향을 다시 발명하는 단계가 아니라, chosen thesis를 충실히 번역하는 단계다.
 - browser review는 뒤늦은 디자인 탐색이 아니라 fidelity와 usability 검증을 담당한다.
