@@ -3,6 +3,7 @@
 ## 문서 목적
 
 - 이 문서는 `service.yaml`과 핵심 설계 문서를 프롬프트 친화적인 요약으로 압축한다.
+- UI 생성의 최상위 디자인 기준은 루트 `DESIGN.md`에 둔다.
 - 상세한 판단 근거는 원문 문서를 우선으로 보고, 이 문서는 세션 시작과 검증 시점에 빠르게 맥락을 회복하는 용도로 사용한다.
 
 ## 서비스 핵심
@@ -22,6 +23,7 @@
 
 ## 디자인/UX 기준
 
+- authoritative design spec: `DESIGN.md`
 - 톤: {{DESIGN_TONE}}
 - 비주얼 방향: {{DESIGN_VISUAL_DIRECTION}}
 - 키워드:
@@ -36,9 +38,14 @@
 {{DESIGN_COMPONENT_RULES_BULLETS}}
 - 모션:
 {{DESIGN_MOTION_BULLETS}}
+- DESIGN.md 후보:
+{{DESIGN_REFERENCE_CANDIDATES_BULLETS}}
+- 선택한 DESIGN.md 레퍼런스:
+{{SELECTED_DESIGN_REFERENCE_BULLETS}}
 
 ## 디자인 구현 규칙
 
+- 프로젝트 초기 설정과 실질적인 디자인 변경은 `docs/design/design-reference-selection.kr.md`에서 `oh-my-design`와 `getdesign.md` 후보를 먼저 비교한 뒤 진행한다.
 - 기본 구현 폰트는 국문 Pretendard, 영문 Inter로 고정한다.
 - 테마상 다른 글꼴이 필요할 때만 예외를 허용하고 art direction에 이유와 적용 범위를 남긴다.
 - 웹 디자인은 구현 전에 Codex가 이미지 기반 비주얼 초안을 먼저 생성한다.
@@ -81,6 +88,8 @@
 
 ### design
 
+- `DESIGN.md`를 UI 생성의 1차 기준으로 읽고, 세부 근거는 `docs/design/*.kr.md`에서 확인한다.
+- `docs/design/design-reference-selection.kr.md`에서 두 DESIGN.md 제공처 후보와 선택 축을 확인한다.
 - `docs/design/art-direction.kr.md`, `docs/design/ui-principles.kr.md`, `docs/design/browser-review.kr.md`를 함께 읽고 UI 판단에 반영한다.
 - `ui-foundation` 또는 `ui-new-screen` 작업이면 `docs/design/ui-intent-brief.kr.md`, `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md`도 함께 읽는다.
 - UI 수정 작업이면 `docs/design/ui-edit-brief.kr.md`도 함께 읽고 변경 범위를 벗어나지 않게 해석한다.
@@ -123,8 +132,9 @@
 
 ## 프롬프트 적용 규칙
 
-- 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
+- 최신 근거 순서: `AGENTS.md` -> `DESIGN.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
 - 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
+- 프로젝트 컨셉을 처음 잡거나 디자인 방향을 실질적으로 바꿀 때는 `oh-my-design`와 `getdesign.md`에서 각각 후보를 추린 뒤 선택 근거를 문서화한다.
 - serious UI 작업에서는 code보다 먼저 intent brief, layout exploration, visual concepts, concept images를 정리한다.
 - 첫 시안이 마음에 들어야 이후 반복이 detail polish로 수렴한다는 것을 기본 목표로 둔다.
 - same-category reference와 cross-category reference를 모두 확인하고, generic fallback을 명시적으로 거부한다.

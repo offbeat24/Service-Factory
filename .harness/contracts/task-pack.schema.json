@@ -83,6 +83,11 @@
         },
         {
           "contains": {
+            "const": "docs/design/design-reference-selection.kr.md"
+          }
+        },
+        {
+          "contains": {
             "const": "docs/design/ui-principles.kr.md"
           }
         },
@@ -119,6 +124,11 @@
         {
           "contains": {
             "const": "docs/design/art-direction.kr.md"
+          }
+        },
+        {
+          "contains": {
+            "const": "docs/design/design-reference-selection.kr.md"
           }
         },
         {

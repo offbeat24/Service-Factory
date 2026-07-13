@@ -18,6 +18,7 @@
 다음 문서를 먼저 읽고 그 기준 안에서만 작업한다.
 - docs/prompting/prompt-context.kr.md
 - docs/design/art-direction.kr.md
+- docs/design/design-reference-selection.kr.md
 - docs/design/ui-intent-brief.kr.md
 - docs/design/layout-exploration.kr.md
 - docs/design/visual-concepts.kr.md
@@ -56,6 +57,9 @@ primary user action:
 - [anti-pattern 3]
 
 reference 요구:
+- oh-my-design 후보 1개 이상
+- getdesign.md 후보 1개 이상
+- 선택한 DESIGN.md 레퍼런스와 축별 적용 근거
 - same-category reference 1개 이상
 - cross-category reference 1개 이상
 - anti-reference 1개 이상

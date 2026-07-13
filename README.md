@@ -63,6 +63,8 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
 - 생성 서비스 레포는 `<type>: <subject>` 형식의 커밋 메시지를 위한 템플릿과 `commit-msg` hook을 포함한다.
 - 생성 서비스 레포는 HQ 런타임 기본값에 맞춘 `.nvmrc`, `.node-version`을 포함한다.
 - 생성 서비스 레포는 art direction, UI principles, browser review 문서를 포함한다.
+- 생성 서비스 레포는 루트 `DESIGN.md`를 포함하고, 이를 UI 생성의 권위 있는 시각 규격 문서로 사용한다.
+- 생성 서비스 레포는 `docs/design/design-reference-selection.kr.md`를 포함하고, 프로젝트 컨셉에 따라 `oh-my-design`와 `getdesign.md`에서 DESIGN.md 후보를 먼저 추린 뒤 선택 축을 기록한다.
 - 생성 서비스 레포는 UI 수정 요청을 좁게 고정하기 위한 `docs/design/ui-edit-brief.kr.md` 기본 문서를 포함한다.
 - 생성 서비스 레포는 serious UI 작업을 구현 전에 고정하기 위한 `docs/design/ui-intent-brief.kr.md`, `docs/design/layout-exploration.kr.md`, `docs/design/visual-concepts.kr.md` 기본 문서를 포함한다.
 - 생성 서비스 레포는 `docs/prompting/prompt-context.kr.md`를 포함한다.
@@ -80,6 +82,7 @@ Harness HQ는 Codex-first 서비스 팩토리의 본부 저장소다. 이 저장
 - 코드만이 산출물이 아니다.
   - 필요하면 테스트, 문서, evidence, run report, 리뷰 메모까지 함께 남긴다.
 - 중요한 UI 작업에서는 first pass의 구조와 비주얼 언어를 구현 전에 문서와 concept image로 고정한다.
+- 프로젝트 초기 설정과 실질적인 디자인 변경은 두 DESIGN.md 제공처 후보 비교와 선택 근거 기록을 먼저 수행한다.
 - 장기 기억은 채팅이 아니라 버전 관리되는 파일과 문서에 둔다.
 - 시점 민감한 사실은 웹이나 공식 도구로 확인하고, repo 내부 정책은 외부 일반론보다 우선한다.
 - 프롬프트/구조 감사는 `gpt-5.5`로 수행하고, 결과는 문서와 검증 스크립트에 반영한다.

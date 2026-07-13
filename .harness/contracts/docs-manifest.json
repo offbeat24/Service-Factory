@@ -23,6 +23,21 @@
   ],
   "required_documents": [
     {
+      "path": "DESIGN.md",
+      "sections": [
+        "Overview",
+        "Brand Voice",
+        "Color Palette",
+        "Typography",
+        "Layout Principles",
+        "Component Styling",
+        "Motion",
+        "Imagery",
+        "Do / Don't",
+        "Agent Guidance"
+      ]
+    },
+    {
       "path": "docs/product/product-spec.kr.md",
       "sections": [
         "서비스 개요",
@@ -40,6 +55,8 @@
       "sections": [
         "디자인 목표",
         "참고 레퍼런스",
+        "DESIGN.md 레퍼런스 후보",
+        "선택한 DESIGN.md 레퍼런스",
         "피해야 할 패턴",
         "컬러 토큰",
         "타이포그래피 방향",
@@ -53,6 +70,19 @@
         "대비 전략",
         "반복할 시그니처 모티프",
         "기본값으로 굳어지면 안 되는 패턴"
+      ]
+    },
+    {
+      "path": "docs/design/design-reference-selection.kr.md",
+      "sections": [
+        "목적",
+        "제공처 확인",
+        "후보 추림 기준",
+        "후보 목록",
+        "선택 결과",
+        "적용 축",
+        "변경 절차",
+        "선택 로그"
       ]
     },
     {

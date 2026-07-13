@@ -40,9 +40,13 @@ REQUIRED_BRANDING_FIELDS = [
     "tone",
     "visual_direction",
     "keywords",
+    "design_reference_candidates",
+    "selected_design_reference",
 ]
 REQUIRED_TASK_PACK_READS = [
+    "DESIGN.md",
     "docs/design/art-direction.kr.md",
+    "docs/design/design-reference-selection.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
     "docs/prompting/prompt-context.kr.md",
@@ -56,6 +60,7 @@ SERIOUS_UI_DOCS = [
 REQUIRED_TEMPLATES = [
     "AGENTS.md.tpl",
     "README.md.tpl",
+    "DESIGN.md.tpl",
     ".gitignore.tpl",
     ".nvmrc.tpl",
     ".node-version.tpl",
@@ -75,6 +80,7 @@ REQUIRED_TEMPLATES = [
     "scripts/generate_claude_shim.py.tpl",
     "docs/product/product-spec.kr.md.tpl",
     "docs/design/art-direction.kr.md.tpl",
+    "docs/design/design-reference-selection.kr.md.tpl",
     "docs/design/browser-review.kr.md.tpl",
     "docs/design/ui-intent-brief.kr.md.tpl",
     "docs/design/layout-exploration.kr.md.tpl",
@@ -231,10 +237,20 @@ def validate_service_spec(path: Path) -> None:
         isinstance(branding["keywords"], list) and bool(branding["keywords"]),
         "example service.yaml branding.keywords must be a non-empty list",
     )
-    for field in ["references", "anti_references", "layout_principles", "component_rules"]:
+    for field in ["references", "anti_references", "layout_principles", "component_rules", "design_reference_candidates"]:
         value = branding.get(field)
         ensure(value is None or isinstance(value, list), f"example service.yaml branding.{field} must be a list")
-    for field in ["palette", "typography", "motion", "imagery"]:
+    candidate_sources = {
+        str(candidate.get("source", "")).lower()
+        for candidate in branding.get("design_reference_candidates", [])
+        if isinstance(candidate, dict)
+    }
+    for source in ["oh-my-design", "getdesign.md"]:
+        ensure(
+            source in candidate_sources,
+            f"example service.yaml branding.design_reference_candidates must include a {source} candidate",
+        )
+    for field in ["palette", "typography", "motion", "imagery", "selected_design_reference"]:
         value = branding.get(field)
         ensure(value is None or isinstance(value, dict), f"example service.yaml branding.{field} must be a mapping")
 
@@ -493,6 +509,7 @@ def validate_dry_run_generation() -> None:
         )
         generated = destination / "focus-sprint"
         ensure((generated / "AGENTS.md").exists(), "generated AGENTS.md missing")
+        ensure((generated / "DESIGN.md").exists(), "generated DESIGN.md missing")
         ensure((generated / ".gitignore").exists(), "generated .gitignore missing")
         ensure((generated / ".nvmrc").exists(), "generated .nvmrc missing")
         ensure((generated / ".node-version").exists(), "generated .node-version missing")
@@ -512,6 +529,7 @@ def validate_dry_run_generation() -> None:
         ensure((generated / "service.yaml").exists(), "generated service.yaml missing")
         ensure((generated / "docs-manifest.json").exists(), "generated docs-manifest.json missing")
         ensure((generated / "docs" / "design" / "art-direction.kr.md").exists(), "generated art-direction doc missing")
+        ensure((generated / "docs" / "design" / "design-reference-selection.kr.md").exists(), "generated design-reference-selection doc missing")
         ensure((generated / "docs" / "design" / "browser-review.kr.md").exists(), "generated browser-review doc missing")
         ensure((generated / "docs" / "design" / "ui-intent-brief.kr.md").exists(), "generated ui-intent-brief doc missing")
         ensure((generated / "docs" / "design" / "layout-exploration.kr.md").exists(), "generated layout-exploration doc missing")

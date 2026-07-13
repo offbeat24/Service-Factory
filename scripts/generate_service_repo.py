@@ -89,17 +89,31 @@ def ensure_service_spec(spec: dict[str, Any]) -> None:
 
     if not isinstance(spec["branding"], dict):
         raise SystemExit("branding must be a mapping")
-    required_branding_fields = ["tone", "visual_direction", "keywords"]
+    required_branding_fields = [
+        "tone",
+        "visual_direction",
+        "keywords",
+        "design_reference_candidates",
+        "selected_design_reference",
+    ]
     missing_branding = [field for field in required_branding_fields if field not in spec["branding"]]
     if missing_branding:
         raise SystemExit(f"branding is missing required fields: {', '.join(missing_branding)}")
     if not isinstance(spec["branding"]["keywords"], list) or not spec["branding"]["keywords"]:
         raise SystemExit("branding.keywords must be a non-empty list")
-    for field in ["references", "anti_references", "layout_principles", "component_rules"]:
+    for field in ["references", "anti_references", "layout_principles", "component_rules", "design_reference_candidates"]:
         value = spec["branding"].get(field)
         if value is not None and not isinstance(value, list):
             raise SystemExit(f"branding.{field} must be a list when provided")
-    for field in ["palette", "typography", "motion", "imagery"]:
+    candidate_sources = {
+        str(candidate.get("source", "")).lower()
+        for candidate in spec["branding"].get("design_reference_candidates", [])
+        if isinstance(candidate, dict)
+    }
+    for source in ["oh-my-design", "getdesign.md"]:
+        if source not in candidate_sources:
+            raise SystemExit(f"branding.design_reference_candidates must include a {source} candidate")
+    for field in ["palette", "typography", "motion", "imagery", "selected_design_reference"]:
         value = spec["branding"].get(field)
         if value is not None and not isinstance(value, dict):
             raise SystemExit(f"branding.{field} must be a mapping when provided")
@@ -198,6 +212,14 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
             branding.get("references"),
             "참고 레퍼런스를 최소 3개까지 보강한다.",
         ),
+        "DESIGN_REFERENCE_CANDIDATES_BULLETS": render_list_or_default(
+            branding.get("design_reference_candidates"),
+            "oh-my-design와 getdesign.md에서 각각 후보를 고르고 fit/use_for/risk를 기록한다.",
+        ),
+        "SELECTED_DESIGN_REFERENCE_BULLETS": render_mapping_or_default(
+            branding.get("selected_design_reference"),
+            "선택한 DESIGN.md 레퍼런스와 축별 적용 근거를 기록한다.",
+        ),
         "DESIGN_ANTI_REFERENCES_BULLETS": render_list_or_default(
             branding.get("anti_references"),
             "피해야 할 디자인 패턴을 문서화한다.",
@@ -206,14 +228,23 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
             branding.get("palette"),
             "primary, accent, background, text 기준 색을 추가한다.",
         ),
+        "DESIGN_PRIMARY_COLOR": str(branding.get("palette", {}).get("primary", "#1F3A5F")),
+        "DESIGN_ACCENT_COLOR": str(branding.get("palette", {}).get("accent", "#D97A2B")),
+        "DESIGN_BACKGROUND_COLOR": str(branding.get("palette", {}).get("background", "#F6F1E8")),
+        "DESIGN_SURFACE_COLOR": str(branding.get("palette", {}).get("surface", "#FFFDF9")),
+        "DESIGN_TEXT_COLOR": str(branding.get("palette", {}).get("text", "#111111")),
         "DESIGN_TYPOGRAPHY_BULLETS": render_mapping_or_default(
             branding.get("typography"),
             "헤드라인/본문 타이포 기준을 추가한다.",
         ),
+        "DESIGN_KOREAN_FONT": str(branding.get("typography", {}).get("korean", "Pretendard")),
+        "DESIGN_ENGLISH_FONT": str(branding.get("typography", {}).get("english", "Inter")),
         "DESIGN_MOTION_BULLETS": render_mapping_or_default(
             branding.get("motion"),
             "모션 강도와 허용 범위를 추가한다.",
         ),
+        "DESIGN_MOTION_STYLE": str(branding.get("motion", {}).get("style", "restrained")),
+        "DESIGN_MOTION_EMPHASIS": str(branding.get("motion", {}).get("emphasis", "section reveals only")),
         "DESIGN_IMAGERY_BULLETS": render_mapping_or_default(
             branding.get("imagery"),
             "이미지 또는 일러스트 방향을 추가한다.",
@@ -271,10 +302,12 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                 "visual_thesis": bootstrap_visual_thesis,
                 "must_read": [
                     "AGENTS.md",
+                    "DESIGN.md",
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
                     "docs/product/product-spec.kr.md",
                     "docs/prompting/prompt-context.kr.md",
                     "docs/design/art-direction.kr.md",
+                    "docs/design/design-reference-selection.kr.md",
                     "docs/design/ui-intent-brief.kr.md",
                     "docs/design/layout-exploration.kr.md",
                     "docs/design/visual-concepts.kr.md",
@@ -297,9 +330,11 @@ def render_context(spec: dict[str, Any], source_spec: Path) -> dict[str, str]:
                     "python3 scripts/harness.py ci",
                 ],
                 "docs_required": [
+                    "DESIGN.md",
                     f"docs/exec-plans/active/{BOOTSTRAP_TASK_ID}.kr.md",
                     "docs/prompting/prompt-context.kr.md",
                     "docs/design/art-direction.kr.md",
+                    "docs/design/design-reference-selection.kr.md",
                     "docs/design/ui-intent-brief.kr.md",
                     "docs/design/layout-exploration.kr.md",
                     "docs/design/visual-concepts.kr.md",

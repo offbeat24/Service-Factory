@@ -62,9 +62,13 @@ REQUIRED_BRANDING_FIELDS = [
     "tone",
     "visual_direction",
     "keywords",
+    "design_reference_candidates",
+    "selected_design_reference",
 ]
 REQUIRED_TASK_PACK_READS = [
+    "DESIGN.md",
     "docs/design/art-direction.kr.md",
+    "docs/design/design-reference-selection.kr.md",
     "docs/design/ui-principles.kr.md",
     "docs/design/browser-review.kr.md",
     "docs/prompting/prompt-context.kr.md",
@@ -231,6 +235,7 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
     product_spec_path = ROOT / "docs" / "product" / "product-spec.kr.md"
     art_direction_path = ROOT / "docs" / "design" / "art-direction.kr.md"
+    design_reference_selection_path = ROOT / "docs" / "design" / "design-reference-selection.kr.md"
     ui_intent_brief_path = ROOT / "docs" / "design" / "ui-intent-brief.kr.md"
     layout_exploration_path = ROOT / "docs" / "design" / "layout-exploration.kr.md"
     visual_concepts_path = ROOT / "docs" / "design" / "visual-concepts.kr.md"
@@ -248,6 +253,7 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 ## 문서 목적
 
 - 이 문서는 `service.yaml`과 핵심 설계 문서를 프롬프트 친화적인 요약으로 압축한다.
+- UI 생성의 최상위 디자인 기준은 루트 `DESIGN.md`에 둔다.
 - 상세 판단은 원문 문서를 우선으로 하고, 이 문서는 세션 시작과 검증 시점의 빠른 맥락 복구에 사용한다.
 
 ## 서비스 핵심
@@ -267,6 +273,7 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
 ## 디자인/UX 기준
 
+- authoritative design spec: `DESIGN.md`
 - 톤: {flatten_value(branding.get("tone", "명시 필요"))}
 - 비주얼 방향: {flatten_value(branding.get("visual_direction", "명시 필요"))}
 - 키워드:
@@ -281,9 +288,14 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 {render_list(branding.get("component_rules"), "컴포넌트 규칙을 service.yaml에 보강한다.")}
 - 모션:
 {render_mapping(branding.get("motion"), "모션 기준을 service.yaml에 보강한다.")}
+- DESIGN.md 후보:
+{render_list(branding.get("design_reference_candidates"), "oh-my-design와 getdesign.md 후보를 service.yaml에 보강한다.")}
+- 선택한 DESIGN.md 레퍼런스:
+{render_mapping(branding.get("selected_design_reference"), "선택한 DESIGN.md 레퍼런스와 축별 적용 근거를 service.yaml에 보강한다.")}
 
 ## 디자인 구현 규칙
 
+- 프로젝트 초기 설정과 실질적인 디자인 변경은 `docs/design/design-reference-selection.kr.md`에서 `oh-my-design`와 `getdesign.md` 후보를 먼저 비교한 뒤 진행한다.
 - 기본 구현 폰트는 국문 Pretendard, 영문 Inter로 고정한다.
 - 테마상 다른 글꼴이 필요할 때만 예외를 허용하고 art direction에 이유와 적용 범위를 남긴다.
 - 웹 디자인은 구현 전에 Codex가 이미지 기반 비주얼 초안을 먼저 생성한다.
@@ -327,7 +339,9 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
 ### design
 
+- `DESIGN.md`를 UI 생성의 1차 기준으로 읽고, 세부 근거는 `docs/design/*.kr.md`에서 확인한다.
 {summarize_sections(art_direction_path, ["디자인 목표", "참고 레퍼런스", "피해야 할 패턴", "컬러 토큰", "타이포그래피 정책", "비주얼 초안 생성 절차"], "art-direction 문서를 보강한다.")}
+{summarize_sections(design_reference_selection_path, ["목적", "제공처 확인", "후보 목록", "선택 결과", "변경 절차"], "design-reference-selection 문서를 보강한다.")}
 {summarize_sections(ui_intent_brief_path, ["목적", "기본 작업 분류"], "ui-intent-brief 문서를 보강한다.")}
 {summarize_sections(layout_exploration_path, ["공통 입력", "방향 A", "방향 B", "레이아웃 테제", "generic 회피 선언"], "layout-exploration 문서를 보강한다.")}
 {summarize_sections(visual_concepts_path, ["비주얼 컨셉 A", "비주얼 컨셉 B", "비주얼 테제", "컨셉 이미지 계획", "구현 번역 노트"], "visual-concepts 문서를 보강한다.")}
@@ -373,7 +387,7 @@ def sync_prompt_context(task_id: str | None = None) -> None:
 
 ## 프롬프트 적용 규칙
 
-- 최신 근거 순서: `AGENTS.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
+- 최신 근거 순서: `AGENTS.md` -> `DESIGN.md` -> `service.yaml` -> `docs/prompting/prompt-context.kr.md` -> 상세 설계 문서
 - 디자인 추정이 필요하면 디자인 문서와 브라우저 리뷰 기준을 먼저 확인한다.
 - UI 수정 요청에서는 무엇을 바꾸지 말아야 하는지부터 선언하고, 한 화면, 한 의도, 한 검증 루프로 잘게 나눈다.
 - serious UI 작업에서는 코드보다 먼저 intent brief, layout exploration, visual concepts, concept images를 정리한다.
@@ -481,11 +495,19 @@ def validate_service_yaml() -> None:
         raise ValidationError(f"service.yaml branding missing required keys: {', '.join(branding_missing)}")
     if not isinstance(branding["keywords"], list) or not branding["keywords"]:
         raise ValidationError("service.yaml branding.keywords must be a non-empty list")
-    for field in ["references", "anti_references", "layout_principles", "component_rules"]:
+    for field in ["references", "anti_references", "layout_principles", "component_rules", "design_reference_candidates"]:
         value = branding.get(field)
         if value is not None and not isinstance(value, list):
             raise ValidationError(f"service.yaml branding.{field} must be a list when provided")
-    for field in ["palette", "typography", "motion", "imagery"]:
+    candidate_sources = {
+        str(candidate.get("source", "")).lower()
+        for candidate in branding.get("design_reference_candidates", [])
+        if isinstance(candidate, dict)
+    }
+    for source in ["oh-my-design", "getdesign.md"]:
+        if source not in candidate_sources:
+            raise ValidationError(f"service.yaml branding.design_reference_candidates must include a {source} candidate")
+    for field in ["palette", "typography", "motion", "imagery", "selected_design_reference"]:
         value = branding.get(field)
         if value is not None and not isinstance(value, dict):
             raise ValidationError(f"service.yaml branding.{field} must be a mapping when provided")
