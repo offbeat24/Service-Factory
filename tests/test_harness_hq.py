@@ -72,15 +72,15 @@ class HarnessHQTests(unittest.TestCase):
             self.assertTrue((repo / "docs" / "prompting" / "ui-edit-prompt-template.kr.md").exists())
             self.assertTrue((repo / "scripts" / "harness.py").exists())
             config_text = (repo / ".codex" / "config.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.4"', config_text)
-            self.assertIn('review_model = "gpt-5.5"', config_text)
+            self.assertIn('model = "gpt-5.5"', config_text)
+            self.assertIn('review_model = "gpt-5.6"', config_text)
             self.assertIn("max_depth = 1", config_text)
             planner_text = (repo / ".codex" / "agents" / "architecture-planner.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.5"', planner_text)
+            self.assertIn('model = "gpt-5.6"', planner_text)
             ui_checker_text = (repo / ".codex" / "agents" / "ui-checker.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.5"', ui_checker_text)
+            self.assertIn('model = "gpt-5.6"', ui_checker_text)
             worker_text = (repo / ".codex" / "agents" / "implementation-worker.toml").read_text(encoding="utf-8")
-            self.assertIn('model = "gpt-5.3-codex"', worker_text)
+            self.assertIn('model = "gpt-5.4"', worker_text)
             self.assertEqual((repo / ".nvmrc").read_text(encoding="utf-8").strip(), "20.19.6")
             self.assertEqual((repo / ".node-version").read_text(encoding="utf-8").strip(), "20.19.6")
             art_direction_text = (repo / "docs" / "design" / "art-direction.kr.md").read_text(encoding="utf-8")
@@ -102,8 +102,8 @@ class HarnessHQTests(unittest.TestCase):
             self.assertNotIn("feature/BOOTSTRAP-001-init", readme_text)
             self.assertIn("git config commit.template .gitmessage.txt", readme_text)
             self.assertIn("observe -> plan -> execute -> verify -> record", readme_text)
-            self.assertIn("prompt/system structure audit model: `gpt-5.5`", readme_text)
-            self.assertIn("Image-related default model: `gpt-5.5`", readme_text)
+            self.assertIn("prompt/system structure audit model: `gpt-5.6`", readme_text)
+            self.assertIn("Image-related default model: `gpt-5.6`", readme_text)
             agents_text = (repo / "AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("Authoritative design spec: `DESIGN.md`", agents_text)
             self.assertIn("Design reference selection: `docs/design/design-reference-selection.kr.md`", agents_text)
@@ -119,7 +119,7 @@ class HarnessHQTests(unittest.TestCase):
             self.assertIn("작업 순서: 관찰 -> 계획 -> 실행 -> 검증 -> 기록", prompt_context_text)
             self.assertIn("이 문서는 빠른 맥락 복구용 요약이다.", prompt_context_text)
             self.assertIn("프롬프트/구조 감사는", prompt_context_text)
-            self.assertIn("이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다.", prompt_context_text)
+            self.assertIn("이미지 생성 초안, 이미지 해석, 스크린샷 기반 시각 판단은 최신 상위 모델을 우선 사용한다. 현재 기본값은 `gpt-5.6`이다.", prompt_context_text)
             self.assertIn("oh-my-design", prompt_context_text)
             self.assertIn("getdesign.md", prompt_context_text)
             self.assertIn("## UI 작업 유형 규칙", prompt_context_text)
@@ -182,8 +182,8 @@ class HarnessHQTests(unittest.TestCase):
                     {
                         "task_id": "BOOTSTRAP-001",
                         "provider": "openai",
-                        "lead_model": "gpt-5.4",
-                        "worker_models": ["gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2"],
+                        "lead_model": "gpt-5.5",
+                        "worker_models": ["gpt-5.4"],
                         "changed_scope": ["docs/product/product-spec.kr.md"],
                         "verification_results": [{"name": "pre-complete", "status": "passed"}],
                         "evidence_paths": [],
@@ -226,8 +226,8 @@ class HarnessHQTests(unittest.TestCase):
                     {
                         "task_id": "BOOTSTRAP-001",
                         "provider": "openai",
-                        "lead_model": "gpt-5.4",
-                        "worker_models": ["gpt-5.4-mini", "gpt-5.3-codex", "gpt-5.2"],
+                        "lead_model": "gpt-5.5",
+                        "worker_models": ["gpt-5.4"],
                         "changed_scope": ["docs/design/visual-concepts.kr.md"],
                         "verification_results": [{"name": "browser-review", "status": "passed"}],
                         "evidence_paths": [],

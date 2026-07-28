@@ -70,11 +70,11 @@
 
 - Codex must not spawn nested workers in this repo.
 - The generated `.codex/config.toml` keeps `agents.max_depth = 1` because current Codex requires depth >= 1 for the root agent to run.
-- Default root work uses `gpt-5.4`.
-- Use `architecture_planner` on `gpt-5.5` for initial product framing, prompt/system structure audits, architecture/data boundaries, auth/billing/security, complex UX hierarchy, large task decomposition, failed-debug recovery plans, and contract/template policy changes.
-- Use `reviewer` on `gpt-5.5` for final review and high-risk regression judgment.
-- Use `implementation_worker` on `gpt-5.3-codex` for scoped coding, `doc_gardener` on `gpt-5.4-mini` for low-risk docs/evidence, `long_runner` on `gpt-5.2` for broad audits, and `ui_checker` on `gpt-5.5` for browser evidence checks.
-- For image generation drafts, image interpretation, and screenshot-based visual judgment, use the latest frontier model. The current default is `gpt-5.5`.
+- Default root work uses `gpt-5.5`.
+- Use `architecture_planner` on `gpt-5.6` for initial product framing, prompt/system structure audits, architecture/data boundaries, auth/billing/security, complex UX hierarchy, large task decomposition, failed-debug recovery plans, and contract/template policy changes.
+- Use `reviewer` on `gpt-5.6` for final review and high-risk regression judgment.
+- Use `implementation_worker`, `doc_gardener`, and `long_runner` on `gpt-5.4` for scoped coding, docs/evidence, and broad audits after direction is fixed, and use `ui_checker` on `gpt-5.6` for browser evidence checks.
+- For image generation drafts, image interpretation, and screenshot-based visual judgment, use the latest frontier model. The current default is `gpt-5.6`.
 - Use focused workers only when the parent explicitly asks for them.
 - Default to a single lead agent. Only split work when the subtask has a clean context boundary or isolated write scope.
 - Do not treat hooks as a full safety boundary. Keep human approval for production, billing, data deletion, DB migration, secrets, and infra mutation.

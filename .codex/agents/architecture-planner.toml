@@ -1,6 +1,6 @@
 name = "architecture_planner"
 description = "High-judgment planner for product framing, prompt/system structure audits, architecture, risk boundaries, and irreversible task decomposition."
-model = "gpt-5.5"
+model = "gpt-5.6"
 model_reasoning_effort = "high"
 sandbox_mode = "read-only"
 developer_instructions = """

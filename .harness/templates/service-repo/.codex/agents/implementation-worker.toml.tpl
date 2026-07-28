@@ -1,6 +1,6 @@
 name = "implementation_worker"
 description = "Scoped coding worker for implementation, refactors, bug fixes, and tests."
-model = "gpt-5.3-codex"
+model = "gpt-5.4"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """

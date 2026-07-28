@@ -1,6 +1,6 @@
 name = "long_runner"
 description = "Long-running investigator for broad audits, migrations, and multi-file synthesis."
-model = "gpt-5.2"
+model = "gpt-5.4"
 model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """
